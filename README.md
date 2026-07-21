@@ -5,9 +5,13 @@
 [![Python](https://img.shields.io/badge/Python-3.11%2B-0F172A)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-D97706)](LICENSE)
 
+> **作品集说明：** 本项目仅作为个人项目作品集展示。公开仓库提供可运行的合成数据 Demo，用于呈现产品设计、推荐逻辑与工程实现；完整 AI 链路需自行配置 Dify、PostgreSQL、地图及模型服务。
+
 > 用户不知道去哪，只知道“想安静看海、不要太商业化”。InspiTrip 将这句话拆成 Query Plan，通过混合检索发现候选，再用预算、天数和交通事实做硬过滤，以 UGC Claim 完成证据门控，最后输出可解释的目的地灵感。
 
 **English summary:** InspiTrip turns vague travel feelings into evidence-backed destination recommendations through query planning, hybrid retrieval, deterministic constraints, claim-level evidence gates and transparent fallback behavior.
+
+**Portfolio notice:** This repository is intended for personal portfolio review. Its synthetic-data demo is runnable without credentials; the full AI stack requires separately configured external services and private data.
 
 ## 在线展示
 

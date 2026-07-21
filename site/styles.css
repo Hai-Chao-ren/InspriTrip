@@ -59,6 +59,21 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .public-badge i, .mode-indicator i { width: 7px; height: 7px; border-radius: 50%; background: var(--secondary); box-shadow: 0 0 0 4px rgba(5, 150, 105, .12); }
 .text-link { color: var(--primary); font-size: 13px; text-decoration: none; font-weight: 600; }
 
+.portfolio-notice {
+  max-width: 1880px;
+  margin: 16px auto 0;
+  padding: 10px clamp(20px, 3vw, 48px);
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  color: #365446;
+  background: rgba(254, 243, 226, .72);
+  border-block: 1px solid rgba(217, 119, 6, .18);
+  font-size: 12px;
+  line-height: 1.65;
+}
+.portfolio-notice strong { flex: 0 0 auto; color: #9a5b0a; }
+
 .review-shell {
   max-width: 1880px;
   margin: 0 auto;
