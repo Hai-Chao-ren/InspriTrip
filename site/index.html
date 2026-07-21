@@ -7,7 +7,7 @@
   <title>InspiTrip · AI 产品综合评审页</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&amp;family=Noto+Serif+SC:wght@600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -95,103 +95,238 @@
     <section id="case-study" class="case-panel" aria-label="项目案例说明">
       <article class="case-content">
         <header class="case-hero">
-          <p class="eyebrow">AI PRODUCT PORTFOLIO · 2026</p>
-          <h2>不知道去哪，<br>也能从一句感觉开始。</h2>
-          <p class="hero-lead">InspiTrip 将模糊的出游冲动翻译成结构化偏好，再用事实约束、UGC 证据与确定性排序，给出可解释、可行动的目的地灵感。</p>
-          <p class="english-summary">InspiTrip turns vague travel feelings into evidence-backed destination recommendations through query planning, hybrid retrieval, deterministic constraints and transparent confidence boundaries.</p>
-          <div class="evidence-ledger" aria-label="项目验证摘要">
-            <div><span>工作流</span><strong>23 节点</strong><small>Dify orchestration</small></div>
-            <div><span>Query 评测</span><strong>200 / 200</strong><small>private snapshot</small></div>
-            <div><span>Recall@20/30/60</span><strong>88.33%</strong><small>180 cases</small></div>
-            <div><span>离线测试</span><strong>184</strong><small>before migration</small></div>
+          <div class="doc-badges" aria-label="文档标签">
+            <span class="doc-badge portfolio">Portfolio</span>
+            <span class="doc-badge mvp">MVP</span>
+            <span class="doc-badge version">V1.1</span>
           </div>
-          <p class="metric-note">指标来自未公开的本地评测快照；本页六个地点均为合成演示数据。</p>
+          <h2>InspiTrip AI 旅行灵感推荐系统</h2>
+          <p class="hero-lead">面向“已经产生出行意愿、却说不清目的地”的旅行者。系统通过 AI 理解“想安静看海、不要太商业化”等模糊表达，将其转为可执行的 Query Plan，再由混合检索、事实约束、证据门控与确定性排序生成可解释的目的地建议。</p>
+          <p class="english-summary">An AI-assisted destination discovery product that turns vague travel feelings into constrained, evidence-backed and explainable recommendations.</p>
+          <div class="doc-meta" aria-label="产品文档信息">
+            <div><b>产品阶段</b><span>MVP · 可交互验证</span></div>
+            <div><b>文档状态</b><span>Portfolio Review · V1.1</span></div>
+            <div><b>目标平台</b><span>桌面 Web · 移动端适配</span></div>
+            <div><b>部署方式</b><span>公开 Demo / 本地完整模式</span></div>
+            <div><b>核心用户</b><span>无明确目的地的灵感型旅行者</span></div>
+            <div><b>产品负责人</b><span>AI 产品经理</span></div>
+          </div>
+          <p class="metric-note">作品集说明：公开页面使用 6 个虚构目的地和合成证据；完整 AI 链路依赖单独配置的服务与未公开数据。</p>
         </header>
 
-        <section id="problem" class="case-section">
-          <span class="section-label">产品问题</span>
-          <h3>传统 OTA 擅长回答“去哪里”，却很难处理“我只知道想要什么感觉”。</h3>
-          <div class="problem-contrast">
-            <div><small>结构化搜索</small><p>上海出发、两天、人均 1000 元</p></div>
-            <span aria-hidden="true">＋</span>
-            <div><small>非结构化意图</small><p>想安静看海，不要太商业化</p></div>
+        <section id="overview" class="case-section">
+          <h2>一、文档概述</h2>
+
+          <h3 id="overview-background">1.1 项目背景与用户痛点</h3>
+          <p>传统 OTA 的搜索入口通常要求用户先给出目的地、日期或品类，但旅行灵感阶段的真实表达往往是“周末想松弛一点”“想看海，但不要太商业化”。用户不是没有需求，而是缺少把感觉翻译成搜索条件的能力。</p>
+          <div class="pain-grid">
+            <div><b>表达断层</b><span>用户说的是情绪、氛围和排斥项，平台需要的是地点、预算、天数和交通条件。</span></div>
+            <div><b>决策成本</b><span>用户需要跨攻略、地图和评论反复比较，才能判断一个目的地是否真的适合。</span></div>
+            <div><b>信任缺口</b><span>仅靠生成式文案容易把“听起来合理”误当成“事实可执行”。</span></div>
           </div>
-          <p>核心产品假设不是让模型“猜你喜欢”，而是先把感觉、限制和不确定性拆开：硬约束必须可验证，软偏好用于排序，证据不足时明确降级。</p>
+
+          <h3 id="overview-ai-fit">1.2 为什么该场景适合使用 AI</h3>
+          <p>这个场景同时包含语言歧义、长尾表达和语义匹配，适合让 AI 处理“理解与表达”；但预算、交通、证据和最终排序需要可复现，因此必须由规则、数据库和确定性代码接管。</p>
+          <div class="ai-responsibility" aria-label="AI 与确定性系统职责分工">
+            <div class="ai-side"><small>AI 擅长</small><b>理解模糊语言</b><span>提取情绪、氛围、活动、否定项与潜在证据需求</span><b>发现语义候选</b><span>把口语化需求与目的地画像进行语义匹配</span><b>组织自然表达</b><span>基于已准入证据生成受限推荐理由</span></div>
+            <div class="system-side"><small>确定性系统负责</small><b>核对硬条件</b><span>预算、天数、交通方式与可达性不得由模型猜测</span><b>执行排序策略</b><span>感觉权重、证据门槛和 MMR 多样性均可复现</span><b>控制失败状态</b><span>缺字段则追问、无证据则降级、无结果则返回空状态</span></div>
+          </div>
+          <table class="doc-table option-table">
+            <thead><tr><th>方案</th><th>优势</th><th>主要问题</th><th>结论</th></tr></thead>
+            <tbody>
+              <tr><td>纯标签筛选</td><td>稳定、成本低</td><td>难覆盖“松弛但不无聊”等组合语义</td><td>只作为规则底座</td></tr>
+              <tr><td>端到端 LLM 推荐</td><td>表达自然、搭建快</td><td>事实幻觉、排序不可复现、难审计</td><td>不采用</td></tr>
+              <tr><td><b>AI + 检索 + 规则</b></td><td>兼顾语义理解与事实可信</td><td>链路更长，需要分层评测</td><td><b>当前方案</b></td></tr>
+            </tbody>
+          </table>
+
+          <h3 id="overview-goals">1.3 产品目标与目标用户</h3>
+          <table class="doc-table">
+            <thead><tr><th>目标</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td><b>用户目标</b></td><td>降低表达和筛选成本，从一句自然语言获得愿意继续了解的候选目的地。</td></tr>
+              <tr><td><b>产品目标</b></td><td>在预算、天数和交通可执行的前提下，提高“想去 / 收藏 / 明确正反馈”的有效灵感转化。</td></tr>
+              <tr><td><b>质量目标</b></td><td>硬约束可验证、推荐理由有证据、失败状态透明，不用幻觉填满结果。</td></tr>
+              <tr><td><b>目标用户</b></td><td>已有出游动机但目的地未定、习惯用感受描述需求、希望降低攻略搜索成本的旅行者。</td></tr>
+            </tbody>
+          </table>
+          <blockquote>北极星指标：有效灵感转化率 = 有“想去 / 收藏 / 明确正反馈”的需求会话 ÷ 已提交旅行推荐需求的会话。</blockquote>
         </section>
 
-        <section id="decisions" class="case-section">
-          <span class="section-label">关键决策</span>
-          <h3>用确定性换取可信，而不是把所有判断交给 Agent。</h3>
-          <div class="decision-list">
-            <button type="button" data-jump="clarify"><b>渐进澄清</b><span>默认直接给结果，只在缺少阻断槽位时追问一次。</span><i>查看交互 →</i></button>
-            <button type="button" data-jump="trace"><b>Workflow 而非 ReAct</b><span>Query Plan、检索、过滤、证据门控和输出校验均有明确边界。</span><i>查看流程 →</i></button>
-            <button type="button" data-jump="results"><b>理由与事实分离</b><span>LLM 只生成受限理由；预算、交通与限制由代码渲染。</span><i>查看结果 →</i></button>
+        <section id="requirements" class="case-section">
+          <h2>二、功能需求</h2>
+          <blockquote>本版本覆盖“灵感输入 → 渐进澄清 → 意图结构化 → 候选召回 → 过滤排序 → 证据输出 → 反馈回流”的完整推荐链路。点击模块可查看左侧对应交互。</blockquote>
+          <div class="feature-map" aria-label="功能模块">
+            <button type="button" data-jump="discover"><small>2.1 输入</small><b>灵感表达</b></button>
+            <button type="button" data-jump="clarify"><small>2.2 追问</small><b>渐进澄清</b></button>
+            <button type="button" data-jump="trace"><small>2.3 解析</small><b>Query Plan</b></button>
+            <button type="button" data-jump="trace"><small>2.4 召回</small><b>混合检索</b></button>
+            <button type="button" data-jump="trace"><small>2.5 决策</small><b>过滤与排序</b></button>
+            <button type="button" data-jump="results"><small>2.6 输出</small><b>证据推荐</b></button>
+            <button type="button" data-jump="feedback"><small>2.7 闭环</small><b>状态与反馈</b></button>
+            <button type="button" data-jump="results"><small>2.8 兜底</small><b>失败与降级</b></button>
           </div>
+
+          <h3 id="requirements-input">2.1 灵感输入与输入契约</h3>
+          <p><b>功能描述：</b>允许用户先用一句自然语言表达旅行感觉，再补充出发地、预算与天数。自然语言承担开放表达，表单承担高风险事实输入。</p>
+          <table class="doc-table compact-table">
+            <thead><tr><th>输入</th><th>类型</th><th>设计目的</th></tr></thead>
+            <tbody>
+              <tr><td><code>query</code></td><td>必填文本</td><td>承载情绪、氛围、活动、排斥项与自由表达</td></tr>
+              <tr><td><code>origin</code></td><td>条件必填</td><td>决定交通可达性，是当前唯一阻断槽位</td></tr>
+              <tr><td><code>budget / days</code></td><td>可选数字</td><td>用于硬过滤；缺失时允许带假设推荐</td></tr>
+              <tr><td><code>conversation_id</code></td><td>可选标识</td><td>支持多轮修改与 Query State 延续</td></tr>
+            </tbody>
+          </table>
+
+          <h3 id="requirements-clarify">2.2 渐进澄清</h3>
+          <p><b>核心逻辑：</b>默认优先生成结果，只在缺少会阻断推荐的字段时追问一次。出发地缺失时询问“从哪座城市出发”；预算和天数缺失时不连续盘问，而是在结果中标记假设。</p>
+
+          <h3 id="requirements-plan">2.3 Query Plan 意图结构化</h3>
+          <p><b>输出结构：</b>将原始 Query 转为 <code>scope</code>、<code>task_type</code>、<code>hard_constraints</code>、<code>exclusions</code>、<code>semantic_query</code>、<code>soft_preferences</code> 和 <code>evidence_aspects</code>。Schema 禁止额外字段，标签带置信度，否定项与正向偏好分离。</p>
+
+          <h3 id="requirements-retrieval">2.4 混合候选召回</h3>
+          <p><b>功能描述：</b>Dify 根据 semantic query 执行 BM25、Dense Retrieval 与 Reranker，返回 <code>destination_id + semantic score</code>。检索只负责发现候选，不直接决定最终展示顺序。</p>
+
+          <h3 id="requirements-ranking">2.5 事实过滤与确定性排序</h3>
+          <p><b>核心逻辑：</b>后端从 PostgreSQL 或 JSONL 补齐目的地事实，依次执行预算、天数、交通硬过滤，mood / vibe / activity 加权排序，证据准入和 MMR 多样性选择。相同输入可得到可复现结果。</p>
+
+          <h3 id="requirements-output">2.6 证据推荐与输出契约</h3>
+          <p><b>输出字段：</b><code>kind</code> 区分消息、推荐与空结果；<code>answer</code> 给出状态说明；<code>recommendations</code> 包含名称、城市、受限理由、事实详情、分数与合成数据标识；同时返回 <code>query_plan</code> 和候选诊断信息。</p>
+          <div class="data-chain" aria-label="推荐数据关系">
+            <div><span>Entity</span><small>地点身份</small></div>
+            <div><span>Evidence</span><small>来源凭证</small></div>
+            <div><span>Claim</span><small>原子判断</small></div>
+            <div><span>Fact</span><small>预算与交通</small></div>
+            <div><span>Profile</span><small>感觉画像</small></div>
+          </div>
+
+          <h3 id="requirements-feedback">2.7 产品状态与反馈闭环</h3>
+          <p><b>状态覆盖：</b>正常、生成中、待澄清、空结果和服务降级。结果卡支持证据展开以及“想去 / 不感兴趣 / 信息有误”反馈，分别进入转化指标、排序诊断和数据纠错队列。</p>
+
+          <h3 id="requirements-fallback">2.8 失败与降级</h3>
+          <p><b>设计原则：</b>失败时优先保留事实可信度，而不是保留卡片数量。证据不足的候选不输出；条件过严时返回空结果和调整建议；外部服务不可用时展示可重试状态，不用模型生成未经核实的替代答案。</p>
         </section>
 
-        <section id="architecture" class="case-section">
-          <span class="section-label">系统架构</span>
-          <h3>语义召回交给 Dify，可信推荐交给后端。</h3>
-          <div class="architecture-flow" role="img" aria-label="从用户 Query 到可信推荐的处理流程">
-            <div><small>01</small><b>Query Plan</b><span>意图、硬约束、软偏好</span></div>
-            <i>→</i>
-            <div><small>02</small><b>Hybrid Retrieval</b><span>BM25 + Dense + Reranker</span></div>
-            <i>→</i>
-            <div><small>03</small><b>Deterministic Rank</b><span>事实过滤 + 感觉排序 + MMR</span></div>
-            <i>→</i>
-            <div><small>04</small><b>Evidence Gate</b><span>UGC Claim 取证与限制</span></div>
-          </div>
-          <blockquote>Dify 只返回 destination_id 和语义分数；PostgreSQL / JSONL 提供事实、画像和证据，避免从检索文本反向猜测结构化数据。</blockquote>
-        </section>
-
-        <section id="data-model" class="case-section">
-          <span class="section-label">数据可信层</span>
-          <h3>不是把笔记切 Chunk，而是建立可追溯的数据关系。</h3>
-          <div class="data-chain">
-            <button type="button" data-jump="trace"><span>Entity</span><small>这是什么地点</small></button>
-            <button type="button" data-jump="trace"><span>Evidence</span><small>证据来自哪里</small></button>
-            <button type="button" data-jump="results"><span>Claim</span><small>来源具体说了什么</small></button>
-            <button type="button" data-jump="results"><span>Fact</span><small>预算与交通约束</small></button>
-            <button type="button" data-jump="results"><span>Profile</span><small>目的地适合什么感觉</small></button>
-          </div>
-        </section>
-
-        <section id="evaluation" class="case-section">
-          <span class="section-label">评测与性能</span>
-          <h3>分别验证解析、召回、排序和输出，而不是只看最终文案。</h3>
-          <div class="evaluation-table" role="table">
-            <div role="row"><span role="cell">Query Plan</span><b role="cell">200/200</b><small role="cell">规则 fallback 自动评测</small></div>
-            <div role="row"><span role="cell">Retrieval</span><b role="cell">Recall 88.33%</b><small role="cell">180 条真实工作流用例</small></div>
-            <div role="row"><span role="cell">Backend P95</span><b role="cell">0.667s</b><small role="cell">不含外部实时调用</small></div>
-            <div role="row"><span role="cell">Dify P95</span><b role="cell">20.785s</b><small role="cell">明确记录为待优化项</small></div>
-          </div>
-        </section>
-
-        <section id="experiment" class="case-section">
-          <span class="section-label">指标与实验</span>
-          <h3>北极星是“有效灵感转化率”，不是模型调用次数。</h3>
-          <p>实现了事件白名单、幂等采集、推荐反馈、稳定 50/50 分流和 demo/production 数据隔离。首个实验验证定位权限触发时机。</p>
-          <div class="experiment-card">
-            <div><small>A · auto prompt</small><span>页面加载后请求定位</span></div>
-            <div><small>B · intent prompt</small><span>用户表达出行意图后请求</span></div>
-          </div>
-          <p class="boundary-note">两条自动化演示会话得到的 50% 转化率只证明埋点链路可用，不代表真实用户效果或统计显著性。</p>
-        </section>
-
-        <section id="boundaries" class="case-section">
-          <span class="section-label">能力边界</span>
-          <h3>把没有完成的部分写清楚，也是产品可信度的一部分。</h3>
-          <ul class="boundary-list">
-            <li><b>公开页面：</b>只演示预设合成场景，不声称支持自由生成。</li>
-            <li><b>本地完整模式：</b>需要 Dify、PostgreSQL、高德和可选 Xinference/Tavily。</li>
-            <li><b>数据债务：</b>早期 Extraction 尚保留旧 category 兼容层，生产化需版本化重抽。</li>
-            <li><b>性能：</b>Dify 完整链路 P95 仍偏高，需流式响应与节点级优化。</li>
+        <section id="technology" class="case-section">
+          <h2>三、技术架构与选型</h2>
+          <p>选型原则是“AI 处理语义，规则控制风险，数据提供事实”。公开 Demo 保持零密钥运行；完整模式保留真实编排、数据库、地图与模型服务的接入边界。</p>
+          <table class="doc-table tech-table">
+            <thead><tr><th>层级</th><th>选型</th><th>用途</th><th>选型理由</th></tr></thead>
+            <tbody>
+              <tr><td>交互展示</td><td>HTML / CSS / JavaScript</td><td>GitHub Pages 产品演示</td><td>无后端、无密钥、便于面试现场访问</td></tr>
+              <tr><td>API 与契约</td><td>FastAPI + Pydantic</td><td>Chat、Ranking、Location、Analytics</td><td>类型清晰、Schema 可验证、便于拆分测试</td></tr>
+              <tr><td>AI 编排</td><td>Dify 23 节点 Workflow</td><td>意图模型调用与混合召回</td><td>节点输入输出明确，比开放式 Agent 更可控</td></tr>
+              <tr><td>语义检索</td><td>BM25 + Dense + Reranker</td><td>发现语义候选</td><td>兼顾关键词命中、长尾语义与精排</td></tr>
+              <tr><td>推荐决策</td><td>Python 确定性排序</td><td>硬过滤、感觉加权、证据门控、MMR</td><td>事实规则可复现、可审计、可单测</td></tr>
+              <tr><td>数据访问</td><td>JSONL / PostgreSQL</td><td>Entity、Fact、Travel、Claim、Profile</td><td>Demo 与完整模式保持同一访问边界</td></tr>
+              <tr><td>外部能力</td><td>高德 / Xinference / Tavily</td><td>路线事实、Claim 重排、近期信息核验</td><td>按需配置，不进入公开 Pages</td></tr>
+            </tbody>
+          </table>
+          <h3 id="technology-decisions">3.1 关键架构决策</h3>
+          <ul class="doc-list">
+            <li><b>Workflow 而非 ReAct Agent：</b>旅行推荐包含事实、预算和证据边界，固定工作流能限制调用次数、延迟与不可预测行为。</li>
+            <li><b>检索与排序解耦：</b>Dify 只返回候选 ID 和语义分数；后端负责事实补齐、过滤与最终选择。</li>
+            <li><b>理由与事实分离：</b>LLM 只生成受限理由；预算、交通、限制和降级信息由代码渲染。</li>
+            <li><b>双运行模式：</b><code>demo</code> 使用合成 JSONL 和真实排序逻辑，<code>full</code> 接入 Dify、PostgreSQL 与外部服务。</li>
           </ul>
         </section>
 
-        <section id="run" class="case-section run-section">
-          <span class="section-label">运行与代码</span>
-          <h3>克隆后无需密钥即可启动 demo 模式。</h3>
+        <section id="flow" class="case-section">
+          <h2>四、调用流程</h2>
+          <h3 id="flow-main">4.1 单次推荐核心流程</h3>
+          <ol class="numbered-flow">
+            <li><b>接收需求</b><span>前端提交 query、origin、budget、days 与 conversation_id。</span></li>
+            <li><b>校验与澄清</b><span>Pydantic 校验请求；缺少出发地时返回 needs_clarification，不启动推荐。</span></li>
+            <li><b>生成 Query Plan</b><span>模型输出通过 JSON Schema 校验；异常时使用规则解析兜底。</span></li>
+            <li><b>召回候选</b><span>Dify 执行 BM25、Dense 与 Reranker，输出 destination_id 和语义分数。</span></li>
+            <li><b>补齐事实</b><span>Repository 从 JSONL / PostgreSQL 读取地点、预算、交通、画像与 Claim。</span></li>
+            <li><b>过滤与排序</b><span>硬约束过滤 → 感觉加权 → Claim 重排 → Evidence Gate → MMR。</span></li>
+            <li><b>校验输出</b><span>理由只能引用已准入 Claim，事实字段由代码卡片渲染。</span></li>
+            <li><b>反馈回流</b><span>记录曝光、证据展开和反馈事件，支持排序诊断与实验分析。</span></li>
+          </ol>
+
+          <h3 id="flow-contract">4.2 输入输出设计</h3>
+          <div class="io-contract">
+            <div><small>REQUEST</small><b>用户可控输入</b><code>query · origin · budget · days</code><span>自然语言负责表达，结构化字段负责高风险约束。</span></div>
+            <i aria-hidden="true">→</i>
+            <div><small>QUERY PLAN</small><b>机器可执行意图</b><code>hard_constraints · soft_preferences · evidence_aspects</code><span>把语义理解与推荐执行解耦。</span></div>
+            <i aria-hidden="true">→</i>
+            <div><small>RESPONSE</small><b>可验证结果</b><code>kind · recommendations · diagnostics</code><span>明确区分推荐、追问、空结果与错误状态。</span></div>
+          </div>
+
+          <h3 id="flow-fallback">4.3 失败场景与兜底策略</h3>
+          <table class="doc-table fallback-table">
+            <thead><tr><th>失败点</th><th>系统判断</th><th>用户侧兜底</th></tr></thead>
+            <tbody>
+              <tr><td>缺少出发地</td><td>无法判断可达性</td><td>只追问一次关键字段，不进入错误推荐</td></tr>
+              <tr><td>模型输出不符合 Schema</td><td>Query Plan 不可执行</td><td>使用规则解析 fallback，并保留原始输入</td></tr>
+              <tr><td>候选不满足硬约束</td><td>可用结果为 0</td><td>返回空结果，指出应放宽的预算、天数或活动条件</td></tr>
+              <tr><td>Claim 证据不足</td><td>理由缺少支持</td><td>候选降级或移除，不生成看似合理的文案</td></tr>
+              <tr><td>Dify / 外部服务异常</td><td>完整链路不可用</td><td>展示服务降级与重试入口；公开环境仍可使用 Demo</td></tr>
+              <tr><td>事实相互冲突</td><td>结果不可信</td><td>保留限制提示，进入“信息有误”数据治理队列</td></tr>
+            </tbody>
+          </table>
+          <div class="callout-warn">兜底原则：AI 可以少给答案，但不能用未经验证的答案填补失败。</div>
+        </section>
+
+        <section id="acceptance" class="case-section">
+          <h2>五、验收指标</h2>
+          <h3 id="acceptance-current">5.1 当前验证结果</h3>
+          <table class="doc-table acceptance-table">
+            <thead><tr><th>验收维度</th><th>口径</th><th>当前结果</th><th>结论</th></tr></thead>
+            <tbody>
+              <tr><td>Query Plan</td><td>scope、任务、硬槽位、否定与多轮规则</td><td><b>200 / 200</b></td><td><span class="status-pass">通过</span></td></tr>
+              <tr><td>候选召回</td><td>180 条未公开本地工作流用例</td><td><b>Recall@20/30/60 88.33%</b></td><td><span class="status-recorded">已记录</span></td></tr>
+              <tr><td>库存覆盖</td><td>有效目的地可被召回与排序</td><td><b>60 个 · 100%</b></td><td><span class="status-pass">通过</span></td></tr>
+              <tr><td>后端性能</td><td>不含外部实时服务的 P95</td><td><b>0.667s</b></td><td><span class="status-pass">通过</span></td></tr>
+              <tr><td>完整链路性能</td><td>Dify blocking 工作流 P95</td><td><b>20.785s</b></td><td><span class="status-risk">待优化</span></td></tr>
+              <tr><td>工程质量</td><td>推荐、管道、数据库、API 与公开边界</td><td><b>205 项测试</b></td><td><span class="status-pass">CI 通过</span></td></tr>
+              <tr><td>公开可运行性</td><td>全新克隆、无密钥 Demo 与 Pages</td><td><b>零密钥启动</b></td><td><span class="status-pass">通过</span></td></tr>
+            </tbody>
+          </table>
+          <p class="metric-note">上述业务指标来自未公开本地评测快照，公开合成数据只用于验证代码合同，不用于复算业务效果。</p>
+
+          <h3 id="acceptance-evaluation">5.2 怎么评估 AI 是否有效</h3>
+          <div class="evaluation-layers">
+            <div><small>01 · 解析</small><b>Query Plan</b><span>槽位、否定、置信度、多轮修改与 Schema 合法性</span></div>
+            <div><small>02 · 召回</small><b>Retrieval</b><span>Recall@K、Hit Rate、MRR 与库存覆盖</span></div>
+            <div><small>03 · 决策</small><b>Ranking</b><span>硬约束误杀、感觉匹配、证据准入与多样性</span></div>
+            <div><small>04 · 输出</small><b>Faithfulness</b><span>事实忠实度、引用完整性、空结果与降级状态</span></div>
+            <div><small>05 · 业务</small><b>Conversion</b><span>有效灵感转化、错误率、空结果率、P95 与用户反馈</span></div>
+          </div>
+          <p>线上效果不以“模型回答次数”判断，而以有效灵感转化率为北极星；“想去”计入正向转化，“不感兴趣”用于排序诊断，“信息有误”进入数据治理。首个 A/B 实验比较定位权限在页面加载时触发，还是在用户表达出行意图后触发。</p>
+          <div class="callout-info">自动化 Smoke Test 仅产生两条 Demo 会话。由此得到的 50% 转化率只能证明埋点与计算链路可用，不能作为真实实验结论。</div>
+        </section>
+
+        <section id="scope" class="case-section run-section">
+          <h2>六、范围与边界</h2>
+          <h3 id="scope-included">6.1 本版本包含</h3>
+          <ul class="doc-list">
+            <li>目的地发现、一次渐进澄清、Query Plan、混合召回、硬约束过滤与感觉排序。</li>
+            <li>Claim 级证据门控、受限推荐理由、事实卡、空结果、服务降级与反馈闭环。</li>
+            <li>无密钥 Demo 模式，以及 Dify / PostgreSQL / 高德 / 模型服务的完整模式接入边界。</li>
+          </ul>
+
+          <h3 id="scope-excluded">6.2 明确不做</h3>
+          <ul class="doc-list excluded-list">
+            <li><b>交易履约：</b>不包含酒店、机票、门票预订和支付。</li>
+            <li><b>自动执行型 Agent：</b>不让模型自主决定调用链或替用户下单。</li>
+            <li><b>无证据自由生成：</b>没有 Claim 支持时不生成确定性推荐理由。</li>
+            <li><b>完整实时交通：</b>高德路线估算不等于铁路、轮渡班次与票务信息。</li>
+          </ul>
+
+          <h3 id="scope-boundary">6.3 当前能力边界</h3>
+          <div class="callout-warn">AI 负责“理解感觉、发现候选、组织受限表达”；确定性系统负责“核对事实、执行约束、选择结果”；用户负责“确认真实偏好并做最终旅行决策”。</div>
+          <ul class="doc-list">
+            <li>公网页面是三个引导式合成场景，不把固定结果伪装成实时 AI 自由生成。</li>
+            <li>Query State 当前为进程内存储，多 worker 生产部署需要迁移到共享存储。</li>
+            <li>Dify blocking 链路 P95 偏高，需要流式响应与节点级性能优化。</li>
+            <li>早期 Extraction 数据仍有兼容迁移层，生产化需进行 Schema 版本化重抽。</li>
+          </ul>
+
+          <h3 id="scope-run">6.4 作品集展示与运行</h3>
+          <p>本项目仅作为个人项目作品集展示。公开仓库提供可运行的合成数据 Demo，用于呈现产品设计、推荐逻辑与工程实现；完整 AI 链路需要自行配置外部服务与未公开数据。</p>
           <pre><code>pip install -e ".[dev]"
 uvicorn inspitrip.api.app:app --reload</code></pre>
           <div class="run-actions">
@@ -202,15 +337,17 @@ uvicorn inspitrip.api.app:app --reload</code></pre>
       </article>
 
       <nav class="case-toc" aria-label="项目目录">
-        <p>项目目录</p>
-        <a href="#problem">产品问题</a>
-        <a href="#decisions">关键决策</a>
-        <a href="#architecture">系统架构</a>
-        <a href="#data-model">数据可信层</a>
-        <a href="#evaluation">评测与性能</a>
-        <a href="#experiment">指标与实验</a>
-        <a href="#boundaries">能力边界</a>
-        <a href="#run">运行与代码</a>
+        <p>PRD 目录</p>
+        <a href="#overview">一、文档概述</a>
+        <a class="toc-sub" href="#overview-ai-fit">为什么使用 AI</a>
+        <a href="#requirements">二、功能需求</a>
+        <a class="toc-sub" href="#requirements-input">输入输出设计</a>
+        <a class="toc-sub" href="#requirements-fallback">失败与降级</a>
+        <a href="#technology">三、技术架构与选型</a>
+        <a href="#flow">四、调用流程</a>
+        <a href="#acceptance">五、验收指标</a>
+        <a class="toc-sub" href="#acceptance-evaluation">效果评估</a>
+        <a href="#scope">六、范围与边界</a>
       </nav>
     </section>
   </main>

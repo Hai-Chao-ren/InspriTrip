@@ -167,7 +167,7 @@ document.getElementById('demo-help').addEventListener('click', event => {
   const panel = document.getElementById('demo-help-panel'); panel.hidden = !panel.hidden; event.currentTarget.setAttribute('aria-expanded', String(!panel.hidden));
 });
 
-const sections = [...document.querySelectorAll('.case-section[id]')];
+const sections = [...document.querySelectorAll('.case-section[id], .case-section h3[id]')];
 const tocLinks = [...document.querySelectorAll('.case-toc a')];
 if ('IntersectionObserver' in window) {
   const observer = new IntersectionObserver(entries => {

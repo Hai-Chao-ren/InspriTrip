@@ -42,6 +42,15 @@ class PublicBoundaryTests(unittest.TestCase):
         for color in ("#15803D", "#059669", "#D97706", "#FEF3E2", "#F0FDF4", "#0F172A", "#E2EFE7", "#DC2626"):
             self.assertIn(color, css)
 
+    def test_site_uses_prd_structure_and_covers_ai_product_decisions(self) -> None:
+        html = (ROOT / "site" / "index.html").read_text(encoding="utf-8")
+        for section_id in ("overview", "requirements", "technology", "flow", "acceptance", "scope"):
+            self.assertIn(f'id="{section_id}"', html)
+        for topic in ("为什么该场景适合使用 AI", "输入输出设计", "失败场景与兜底策略", "怎么评估 AI 是否有效"):
+            self.assertIn(topic, html)
+        self.assertIn("产品负责人", html)
+        self.assertIn("AI 产品经理", html)
+
     def test_public_text_contains_no_local_workspace_path(self) -> None:
         candidates = list((ROOT / "site").rglob("*")) + list((ROOT / "docs").rglob("*")) + [ROOT / "README.md"]
         for path in candidates:
