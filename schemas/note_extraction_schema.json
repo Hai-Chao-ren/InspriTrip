@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "单篇 UGC 的 POI mention 抽取结果",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["note_id", "is_suspected_ad", "ad_reason", "mentions"],
+  "properties": {
+    "note_id": {"type": "string"},
+    "is_suspected_ad": {"type": "boolean"},
+    "ad_reason": {"type": "string"},
+    "mentions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "raw_place_name", "canonical_name", "city", "province",
+          "place_status", "mood", "vibe", "activity", "key_quote",
+          "trip_level", "budget_signals", "duration_raw_quote",
+          "duration_days_observed", "duration_confidence"
+        ],
+        "properties": {
+          "raw_place_name": {"type": "string"},
+          "canonical_name": {"type": "string"},
+          "city": {"type": ["string", "null"]},
+          "province": {"type": "string", "enum": ["上海", "江苏", "浙江", "其他"]},
+          "place_status": {"type": "string", "enum": ["specific", "vague"]},
+          "mood": {"type": "array", "items": {"type": "string"}},
+          "vibe": {"type": "array", "items": {"type": "string"}},
+          "activity": {"type": "array", "items": {"type": "string"}},
+          "key_quote": {"type": "string"},
+          "entity_type_hint": {
+            "type": "string",
+            "enum": ["destination", "experience", "service", "transport_node", "unknown"]
+          },
+          "claims": {
+            "type": "array",
+            "maxItems": 6,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "aspect", "polarity", "claim", "key_quote", "conditions",
+                "mood", "vibe", "activity"
+              ],
+              "properties": {
+                "aspect": {
+                  "type": "string",
+                  "enum": [
+                    "mood_fit", "crowd", "commercialization", "scenery",
+                    "activity", "transport", "cost", "stay", "food", "solo",
+                    "photo", "safety", "weather_season", "other"
+                  ]
+                },
+                "polarity": {
+                  "type": "string",
+                  "enum": ["positive", "negative", "mixed", "neutral"]
+                },
+                "claim": {"type": "string"},
+                "key_quote": {"type": "string"},
+                "conditions": {"type": "object", "additionalProperties": true},
+                "mood": {"type": "array", "items": {"type": "string"}},
+                "vibe": {"type": "array", "items": {"type": "string"}},
+                "activity": {"type": "array", "items": {"type": "string"}}
+              }
+            }
+          },
+          "trip_level": {"type": "boolean"},
+          "budget_signals": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["raw_quote", "amount", "basis", "group_size"],
+              "properties": {
+                "raw_quote": {"type": "string"},
+                "amount": {"type": "integer"},
+                "basis": {
+                  "type": "string",
+                  "enum": [
+                    "per_person_trip", "per_person_day", "per_group_trip",
+                    "per_person_meal", "per_room_night", "single_item",
+                    "free", "unknown"
+                  ]
+                },
+                "group_size": {"type": ["integer", "null"]}
+              }
+            }
+          },
+          "duration_raw_quote": {"type": "string"},
+          "duration_days_observed": {"type": ["integer", "null"]},
+          "duration_confidence": {"type": "string", "enum": ["高", "中", "低"]}
+        }
+      }
+    }
+  }
+}

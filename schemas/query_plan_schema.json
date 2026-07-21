@@ -1,0 +1,128 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InspiTrip Query Plan Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "scope", "task_type", "target_destination", "hard_constraints", "exclusions", "semantic_query",
+    "soft_preferences", "evidence_aspects"
+  ],
+  "properties": {
+    "scope": {
+      "type": "string",
+      "enum": ["in_domain", "out_of_region", "not_travel", "not_supported_yet"]
+    },
+    "task_type": {
+      "type": "string",
+      "enum": ["destination_discovery", "experience_lookup", "chitchat", "unsupported"]
+    },
+    "target_destination": {
+      "type": ["string", "null"],
+      "description": "experience_lookup 的已知目的地名称；未明确目的地时必须为 null。"
+    },
+    "hard_constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origin", "days_max", "budget_max", "travel_time_max",
+        "transport_modes", "must_have_activities"
+      ],
+      "properties": {
+        "origin": {"type": ["string", "null"]},
+        "days_max": {"type": ["integer", "null"], "minimum": 1},
+        "budget_max": {"type": ["integer", "null"], "minimum": 0},
+        "travel_time_max": {"type": ["integer", "null"], "minimum": 0},
+        "transport_modes": {
+          "type": "array",
+          "items": {"type": "string", "enum": ["高铁", "自驾", "大巴", "轮渡", "地铁", "公共交通"]}
+        },
+        "must_have_activities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/definitions/activityId"}
+        }
+      }
+    },
+    "exclusions": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "semantic_query": {"type": "string"},
+    "soft_preferences": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mood", "vibe", "activity"],
+      "properties": {
+        "mood": {"$ref": "#/definitions/weightedMoodTags"},
+        "vibe": {"$ref": "#/definitions/weightedVibeTags"},
+        "activity": {"$ref": "#/definitions/weightedActivityTags"}
+      }
+    },
+    "evidence_aspects": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "mood_fit", "crowd", "commercialization", "scenery", "activity",
+          "transport", "cost", "stay", "food", "solo", "photo", "safety",
+          "weather_season", "other"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "activityId": {
+      "type": "string",
+      "enum": [
+        "act_sea", "act_hike", "act_camp", "act_town", "act_cafe",
+        "act_art", "act_ride", "act_stay", "act_hotspring", "act_food"
+      ]
+    },
+    "weightedTagBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "confidence"],
+      "properties": {
+        "id": {"type": "string"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "weightedMoodTags": {
+      "type": "array",
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "allOf": [
+          {"$ref": "#/definitions/weightedTagBase"},
+          {"properties": {"id": {"enum": [
+            "mood_unwind", "mood_heal", "mood_romantic", "mood_excited",
+            "mood_nostalgic", "mood_social", "mood_inspired", "mood_freedom"
+          ]}}}
+        ]
+      }
+    },
+    "weightedVibeTags": {
+      "type": "array",
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "allOf": [
+          {"$ref": "#/definitions/weightedTagBase"},
+          {"properties": {"id": {"enum": [
+            "vibe_niche", "vibe_unspoiled", "vibe_artsy", "vibe_nature",
+            "vibe_local", "vibe_cozy", "vibe_ancient", "vibe_urban"
+          ]}}}
+        ]
+      }
+    },
+    "weightedActivityTags": {
+      "type": "array",
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "allOf": [
+          {"$ref": "#/definitions/weightedTagBase"},
+          {"properties": {"id": {"$ref": "#/definitions/activityId"}}}
+        ]
+      }
+    }
+  }
+}

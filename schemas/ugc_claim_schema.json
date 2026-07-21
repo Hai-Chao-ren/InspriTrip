@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InspiTrip UGC 原子证据 Claim Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "claim_id", "evidence_id", "entity_id", "destination_id", "note_id",
+    "aspect", "polarity", "claim", "key_quote", "mood", "vibe",
+    "activity", "conditions", "author_hash", "publish_date",
+    "collected_date", "source_quality", "is_suspected_ad", "source_url"
+  ],
+  "properties": {
+    "claim_id": {"type": "string"},
+    "evidence_id": {"type": "string"},
+    "entity_id": {"type": "string"},
+    "destination_id": {"type": ["string", "null"]},
+    "note_id": {"type": "string"},
+    "aspect": {
+      "type": "string",
+      "enum": [
+        "mood_fit", "crowd", "commercialization", "scenery", "activity",
+        "transport", "cost", "stay", "food", "solo", "photo", "safety",
+        "weather_season", "other"
+      ]
+    },
+    "polarity": {"type": "string", "enum": ["positive", "negative", "mixed", "neutral"]},
+    "claim": {"type": "string"},
+    "key_quote": {"type": "string"},
+    "mood": {"type": "array", "items": {"type": "string"}},
+    "vibe": {"type": "array", "items": {"type": "string"}},
+    "activity": {"type": "array", "items": {"type": "string"}},
+    "conditions": {"type": "object", "additionalProperties": true},
+    "author_hash": {"type": "string"},
+    "publish_date": {"type": "string"},
+    "collected_date": {"type": "string"},
+    "source_quality": {"type": "number", "minimum": 0, "maximum": 1},
+    "is_suspected_ad": {"type": "boolean"},
+    "source_url": {"type": "string"}
+  }
+}

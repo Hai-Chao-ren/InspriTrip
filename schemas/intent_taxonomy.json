@@ -1,0 +1,171 @@
+{
+  "taxonomy_version": "0.1.0",
+  "updated": "2026-07-10",
+  "description": "InspiTrip 旅行者「感觉」意图树。三维：mood(情绪状态)/vibe(地点氛围)/activity(活动)。query 侧抽取与内容侧打标共用此表，是检索对齐的唯一标准。冷启动粒度：每维 8-10 个末端意图，先粗后细。",
+  "usage": {
+    "for_query": "从用户自然语言抽取软偏好槽位时，归一到本表 leaf_id",
+    "for_content": "给 UGC 笔记/POI 打标时，只能从本表 leaf_id 选，禁止自造",
+    "for_eval": "泛化语料+反例作为打标准确率的评测金标准"
+  },
+  "dimensions": [
+    {
+      "dim": "mood",
+      "dim_name": "情绪状态",
+      "question": "我想要一种什么样的心理状态？",
+      "leaves": [
+        {
+          "leaf_id": "mood_unwind",
+          "name": "独处放空",
+          "definition": "一个人、不社交、主动追求安静与抽离，给自己留白。不含被迫孤独的负面情绪。",
+          "standard": ["想一个人待着", "一个人静静发呆"],
+          "generalized": ["安安静静待一下午", "躲开人潮放空", "不想说话就想发呆", "一个人的旅行", "找个没人的地方待着"],
+          "negative": ["一群朋友安静看展(→社交)", "想找人聊天(相反)"]
+        },
+        {
+          "leaf_id": "mood_heal",
+          "name": "松弛治愈",
+          "definition": "从压力中解脱，身心放松、被抚慰的舒缓感。慢下来、不赶行程。",
+          "standard": ["想放松一下", "治愈疲惫"],
+          "generalized": ["太累了想躺平", "慢节奏度假", "解压回血", "什么都不想干就想歇着", "被治愈的感觉"],
+          "negative": ["想挑战自己(→热血)", "赶紧打卡完(→高效)"]
+        },
+        {
+          "leaf_id": "mood_romantic",
+          "name": "浪漫氛围",
+          "definition": "追求心动、氛围感、情侣或自我浪漫体验，重情绪美感。",
+          "standard": ["想要浪漫的地方", "适合约会"],
+          "generalized": ["看日落好浪漫", "氛围感拉满", "情侣去哪好", "很有故事感的地方", "适合拍情侣照"],
+          "negative": ["带娃亲子(→家庭)", "朋友聚会热闹(→社交)"]
+        },
+        {
+          "leaf_id": "mood_excited",
+          "name": "热血冒险",
+          "definition": "追求刺激、探索、突破，体力或心理上的挑战与兴奋。",
+          "standard": ["想找点刺激", "想冒险"],
+          "generalized": ["挑战一下自己", "户外探险", "肾上腺素飙升", "征服一座山", "野性一点的玩法"],
+          "negative": ["想躺平(→治愈)", "安静发呆(→独处)"]
+        },
+        {
+          "leaf_id": "mood_nostalgic",
+          "name": "怀旧慢忆",
+          "definition": "追寻旧时光、复古、市井记忆带来的温情与感怀。",
+          "standard": ["想找有年代感的地方", "怀旧"],
+          "generalized": ["很有old school味道", "回到小时候的感觉", "老底子的味道", "复古情怀", "时间慢下来的老街"],
+          "negative": ["新潮网红地(→时髦)", "现代艺术(→文艺)"]
+        },
+        {
+          "leaf_id": "mood_social",
+          "name": "热闹欢聚",
+          "definition": "和朋友/家人一起，享受欢乐、烟火、集体氛围。",
+          "standard": ["朋友一起玩", "想热闹一点"],
+          "generalized": ["约上三五好友", "一群人嗨", "家庭出游", "有烟火气的地方", "人多热闹"],
+          "negative": ["一个人静静(→独处)", "浪漫二人世界(→浪漫)"]
+        },
+        {
+          "leaf_id": "mood_inspired",
+          "name": "文艺充电",
+          "definition": "追求审美、灵感、精神滋养，看展/阅读/艺术带来的充实感。",
+          "standard": ["想看看展", "文艺一点的地方"],
+          "generalized": ["找灵感", "美学熏陶", "有调性的空间", "适合发呆看书", "精神食粮"],
+          "negative": ["纯玩乐刺激(→热血)", "市井烟火(→热闹)"]
+        },
+        {
+          "leaf_id": "mood_freedom",
+          "name": "自在随性",
+          "definition": "不做攻略、说走就走、随遇而安的松弛自由感。",
+          "standard": ["随便逛逛", "说走就走"],
+          "generalized": ["不想做攻略", "随性一点", "走到哪算哪", "自由自在", "没计划的旅行"],
+          "negative": ["精心规划路线(→高效)", "打卡清单(→热血)"]
+        }
+      ]
+    },
+    {
+      "dim": "vibe",
+      "dim_name": "地点氛围",
+      "question": "我想要一个什么调性的地方？",
+      "leaves": [
+        {
+          "leaf_id": "vibe_niche",
+          "name": "小众冷门",
+          "definition": "游客少、知名度低、未被大规模开发的地方。",
+          "standard": ["小众的地方", "没什么人知道"],
+          "generalized": ["冷门宝藏", "游客很少", "还没火的地方", "本地人才知道", "避开人群"],
+          "negative": ["网红打卡地(→热门)", "热门景区"]
+        },
+        {
+          "leaf_id": "vibe_unspoiled",
+          "name": "不商业化",
+          "definition": "原生态、无过度商业开发、保留本真质朴的地方。",
+          "standard": ["不商业化", "原生态"],
+          "generalized": ["没有商业气息", "很质朴", "没被过度开发", "保留原貌", "不是义乌小商品一条街"],
+          "negative": ["成熟商业街(→便利)", "购物中心"]
+        },
+        {
+          "leaf_id": "vibe_artsy",
+          "name": "文艺调性",
+          "definition": "有设计感、审美氛围、文化艺术气息的空间。",
+          "standard": ["文艺范", "有设计感"],
+          "generalized": ["ins风", "很有格调", "美术馆咖啡馆", "小资情调", "适合拍照的调性空间"],
+          "negative": ["野生自然(→自然)", "市井菜场(→烟火)"]
+        },
+        {
+          "leaf_id": "vibe_nature",
+          "name": "自然野趣",
+          "definition": "山海湖林等自然环境为主，亲近大自然。",
+          "standard": ["亲近自然", "看自然风光"],
+          "generalized": ["山清水秀", "回归大自然", "野趣", "空气好风景美", "被绿色包围"],
+          "negative": ["城市地标(→都市)", "室内空间"]
+        },
+        {
+          "leaf_id": "vibe_local",
+          "name": "市井烟火",
+          "definition": "本地生活气息、街巷菜场、人间烟火味浓的地方。",
+          "standard": ["有烟火气", "市井生活"],
+          "generalized": ["接地气", "本地人日常", "老街小巷", "菜场早市", "生活气息浓"],
+          "negative": ["精致度假村(→精致)", "无人荒野(→自然)"]
+        },
+        {
+          "leaf_id": "vibe_cozy",
+          "name": "精致惬意",
+          "definition": "舒适、精心打理、有品质感的休闲空间（民宿/度假地）。",
+          "standard": ["精致一点", "舒服的地方"],
+          "generalized": ["品质感", "度假氛围", "住得舒服", "小而美", "惬意放松的环境"],
+          "negative": ["粗犷户外(→野趣)", "简陋将就"]
+        },
+        {
+          "leaf_id": "vibe_ancient",
+          "name": "古朴历史",
+          "definition": "古镇古村、历史街区，有历史沉淀的传统风貌。",
+          "standard": ["古镇古村", "有历史感"],
+          "generalized": ["古色古香", "老建筑", "青砖黛瓦", "千年古镇", "传统风貌"],
+          "negative": ["现代新城(→都市)", "自然山水(→自然)"]
+        },
+        {
+          "leaf_id": "vibe_urban",
+          "name": "都市潮流",
+          "definition": "城市中的时髦、现代、潮流地标或街区。",
+          "standard": ["城市里逛", "潮流地标"],
+          "generalized": ["时髦", "都市感", "新潮打卡", "商圈街区", "现代化"],
+          "negative": ["乡野田园(→自然)", "古镇(→古朴)"]
+        }
+      ]
+    },
+    {
+      "dim": "activity",
+      "dim_name": "活动",
+      "question": "我想去做什么？",
+      "leaves": [
+        {"leaf_id": "act_sea", "name": "看海赶海", "definition": "海边观景、赶海、离岛、沙滩相关活动。", "standard": ["去看海", "赶海"], "generalized": ["海岛游", "沙滩", "踏浪", "离岛", "海边发呆"], "negative": ["爬山(→徒步)"]},
+        {"leaf_id": "act_hike", "name": "徒步山野", "definition": "登山、徒步、山间线路等户外行走活动。", "standard": ["爬山", "徒步"], "generalized": ["登高", "山野线路", "森林徒步", "户外走走", "翻山越岭"], "negative": ["海边(→看海)"]},
+        {"leaf_id": "act_camp", "name": "露营星空", "definition": "扎营、野餐、看星空等户外过夜/半日活动。", "standard": ["露营", "看星空"], "generalized": ["扎营", "野餐", "帐篷", "篝火", "躺草地看星星"], "negative": ["住民宿(→住宿)"]},
+        {"leaf_id": "act_town", "name": "古镇老街", "definition": "逛古镇、古村、历史老街。", "standard": ["逛古镇", "逛老街"], "generalized": ["古村落", "水乡", "老街漫步", "历史街区", "青石板路"], "negative": ["看展(→文艺)"]},
+        {"leaf_id": "act_cafe", "name": "咖啡书店", "definition": "泡咖啡馆、书店、静态休闲空间。", "standard": ["喝咖啡", "逛书店"], "generalized": ["咖啡馆", "书店", "下午茶", "坐一下午", "安静空间"], "negative": ["户外运动(→徒步)"]},
+        {"leaf_id": "act_art", "name": "看展逛馆", "definition": "美术馆、博物馆、艺术展览等文化活动。", "standard": ["看展", "逛博物馆"], "generalized": ["美术馆", "艺术展", "文化馆", "看画", "艺术空间"], "negative": ["自然风光(→看海/徒步)"]},
+        {"leaf_id": "act_ride", "name": "骑行漫游", "definition": "骑行、环湖、绿道等移动式休闲。", "standard": ["骑行", "环湖"], "generalized": ["骑车", "绿道", "环岛骑行", "自行车", "慢慢骑"], "negative": ["徒步(→徒步)"]},
+        {"leaf_id": "act_stay", "name": "民宿住宿", "definition": "以入住体验为核心的民宿/度假住宿。", "standard": ["住民宿", "找个好民宿"], "generalized": ["特色民宿", "度假酒店", "住一晚", "民宿体验", "山里的房子"], "negative": ["露营(→露营)"]},
+        {"leaf_id": "act_hotspring", "name": "温泉泡汤", "definition": "温泉、泡汤等身心放松活动。", "standard": ["泡温泉", "泡汤"], "generalized": ["温泉", "汤池", "泡澡放松", "热汤", "养生泡汤"], "negative": ["看海(→看海)"]},
+        {"leaf_id": "act_food", "name": "寻味觅食", "definition": "以在地美食探店、寻味为核心的活动。", "standard": ["找好吃的", "探店"], "generalized": ["美食", "地道小吃", "本地菜", "觅食", "吃货打卡"], "negative": ["咖啡书店(→咖啡)"]}
+      ]
+    }
+  ]
+}

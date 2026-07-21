@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InspiTrip POI 种子数据 Schema",
+  "description": "江浙沪 2-3h 出行圈私藏目的地主表。字段对齐 docs/03_工业级PRD.md §3 意图槽位，用于混合检索的结构化硬过滤 + 软偏好向量对齐。",
+  "type": "object",
+  "required": ["poi_id", "name", "city", "province", "duration_days", "evidence_count", "confidence", "collected_date"],
+  "properties": {
+    "poi_id": { "type": "string", "description": "唯一主键，如 POI_001，关联 ugc_evidence 表" },
+    "name": { "type": "string", "description": "目的地名称（地点/店/线路）" },
+    "city": { "type": "string", "description": "所在城市，如 舟山、湖州、苏州" },
+    "province": { "type": "string", "enum": ["上海", "江苏", "浙江"], "description": "限江浙沪，越界数据不入库（PRD E6）" },
+
+    "reachable_from": { "type": "array", "items": { "type": "string" }, "description": "硬约束·可达出发地列表，如 [\"上海\",\"杭州\"]。由地图可达性(≤180min)反推，非UGC" },
+    "travel_time_min": { "type": "integer", "description": "硬约束·从主要出发地的交通时长上限（分钟），≤180 对齐 2-3h 圈。来源=地图API，不从UGC抽" },
+    "travel_time_source": { "type": "string", "enum": ["地图API", "UGC辅助"], "description": "交通时长来源标注，确定性事实优先地图API（幻觉率≈0）" },
+    "transport": { "type": "array", "items": { "type": "string", "enum": ["高铁", "自驾", "大巴", "轮渡", "地铁"] }, "description": "可达交通方式" },
+
+    "budget_per_capita": { "type": "integer", "description": "硬约束·人均预算代表值（元，人均全程口径）= budget_typical，用于 ≤X 硬过滤" },
+    "budget_min": { "type": "integer", "description": "预算区间下界（穷游），归一化后人均全程" },
+    "budget_max": { "type": "integer", "description": "预算区间上界（精致），归一化后人均全程" },
+    "budget_basis": { "type": "string", "description": "预算口径说明文案，如 \"人均·全程（含住宿餐饮，不含往返大交通）\"，展示用" },
+    "budget_evidence_count": { "type": "integer", "description": "有金额信号的独立来源笔记数" },
+    "budget_confidence": { "type": "string", "enum": ["高", "中", "低"], "description": "预算置信度，直接命中全程口径→高，分项累加估算→低" },
+    "budget_filterable": {"type": "boolean", "description": "仅中高置信完整行程预算可用于硬过滤"},
+    "budget_estimate_per_capita": {"type": "integer", "description": "碎片消费累加估算，仅展示，不参与硬过滤"},
+
+    "duration_days": { "type": "integer", "description": "硬约束·建议出行天数，1=一日 2=周末两日。= 多篇 observed 的众数" },
+    "duration_source": { "type": "string", "enum": ["证据", "类型默认"], "description": "天数来源：证据=UGC观测聚合 | 类型默认=按活动类型兜底(置信度低)" },
+
+    "mood": { "type": "array", "items": { "type": "string" }, "description": "软偏好·情绪标签，如 [\"松弛\",\"发呆\",\"治愈\"]" },
+    "vibe": { "type": "array", "items": { "type": "string" }, "description": "软偏好·氛围标签，如 [\"小众\",\"不商业化\",\"原生态\"]" },
+    "activity": { "type": "array", "items": { "type": "string" }, "description": "软偏好·活动标签，如 [\"看海\",\"咖啡\",\"露营\",\"逛古镇\"]" },
+    "mood_scores": {"type": "object", "additionalProperties": {"type": "number"}},
+    "vibe_scores": {"type": "object", "additionalProperties": {"type": "number"}},
+    "activity_scores": {"type": "object", "additionalProperties": {"type": "number"}},
+    "best_season": { "type": "string", "description": "适合季节/月份，如 \"4-6月\"" },
+
+    "description": { "type": "string", "description": "私藏理由摘要（≤200字），生成时作为语义召回文本，须锚定 UGC 证据不脑补" },
+
+    "evidence_count": { "type": "integer", "minimum": 1, "description": "独立来源笔记数，用于交叉印证覆盖率（建议 ≥3 才算强印证）" },
+    "independent_sources": { "type": "integer", "minimum": 1, "description": "按 author_hash 去重后的独立来源数；与 evidence_count 使用同一去重口径" },
+    "confidence": { "type": "string", "enum": ["高", "中", "低"], "description": "系统置信度标注，evidence_count 越高 + 时间越新 → 越高" },
+    "evidence_level": { "type": "string", "enum": ["强印证", "弱印证", "孤证/待核"], "description": "展示层印证等级，与 confidence 对应" },
+    "freshness_flag": { "type": "string", "enum": ["新鲜", "待核实", "疑过期"], "description": "新鲜度状态，对抗店倒闭/网红化" },
+    "needs_verify_note": { "type": "string", "description": "透明标注文案，如 \"信息可能变化，出行前请核实营业状态\"" },
+
+    "collected_date": { "type": "string", "format": "date", "description": "采集日期，可追溯" }
+  }
+}
