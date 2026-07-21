@@ -13,7 +13,7 @@ const scenarios = {
     intent: ['松弛治愈', '自然小众', '看海'], flow: [6, 5, 4, 3], results: ['qinglan', 'zhuyin', 'songxi'], clarify: false
   },
   town: {
-    tag: '场景 B', query: '周末想逛古镇、喝咖啡，预算别太高', origin: '', budget: 800, days: 2,
+    tag: '场景 B', query: '周末想逛古镇、喝咖啡，预算别太高', origin: '', budget: '', days: 2,
     intent: ['怀旧松弛', '古朴本地', '古镇 / 咖啡'], flow: [6, 5, 4, 3], results: ['songxi', 'nanan', 'yunquan'], clarify: true
   },
   tight: {
@@ -22,7 +22,43 @@ const scenarios = {
   }
 };
 
-const state = { scenario: 'sea', view: 'discover', forced: 'normal', clarifiedOrigin: '' };
+const CITY_GROUPS = {
+  A:['阿坝','阿克苏','阿拉善','安康','安庆','鞍山','安顺','安阳'],
+  B:['北京','白城','白山','白银','保定','宝鸡','包头','巴中','蚌埠','北海','本溪','滨州','亳州'],
+  C:['重庆','成都','长沙','长春','常州','沧州','昌都','昌吉','潮州','承德','郴州','赤峰','池州','崇左','楚雄','滁州'],
+  D:['大连','大庆','大同','丹东','德阳','德州','东莞','东营','达州','大理'],
+  E:['鄂尔多斯','鄂州','恩施'],
+  F:['福州','佛山','抚顺','抚州','阜阳','防城港'],
+  G:['广州','贵阳','桂林','赣州','甘南','广安','广元','贵港','果洛','固原'],
+  H:['杭州','哈尔滨','海口','合肥','呼和浩特','惠州','湖州','淮安','淮北','淮南','黄冈','黄山','黄石','衡水','衡阳','河池','河源','菏泽','贺州','汉中','邯郸','鹤壁','鹤岗','黑河','红河','葫芦岛'],
+  J:['济南','嘉兴','吉林','江门','金华','晋城','晋中','荆门','荆州','景德镇','九江','酒泉','揭阳','济宁','佳木斯','焦作','锦州'],
+  K:['昆明','开封','克拉玛依','喀什'],
+  L:['兰州','拉萨','廊坊','丽江','连云港','临沂','洛阳','柳州','六安','娄底','泸州','乐山','聊城','辽阳','辽源','临汾','临夏','临沧','林芝','丽水','龙岩','漯河'],
+  M:['绵阳','牡丹江','马鞍山','茂名','梅州','眉山'],
+  N:['南京','南昌','南宁','南通','南阳','宁波','内江','宁德'],
+  P:['平顶山','莆田','盘锦','攀枝花','萍乡','普洱','濮阳'],
+  Q:['青岛','泉州','秦皇岛','齐齐哈尔','衢州','曲靖','黔东南','黔南','黔西南','庆阳','清远','钦州'],
+  R:['日照','日喀则'],
+  S:['上海','深圳','苏州','沈阳','石家庄','三亚','绍兴','汕头','汕尾','韶关','商洛','商丘','上饶','邵阳','十堰','石嘴山','双鸭山','朔州','四平','绥化','遂宁','宿迁','宿州'],
+  T:['天津','太原','泰安','泰州','台州','唐山','天水','铁岭','通化','通辽','铜川','铜陵','铜仁','吐鲁番'],
+  W:['武汉','无锡','温州','乌鲁木齐','潍坊','威海','芜湖','梧州','渭南','文山','乌海','武威'],
+  X:['西安','厦门','西宁','徐州','许昌','咸阳','湘潭','襄阳','孝感','忻州','新乡','新余','信阳','兴安盟','锡林郭勒','西双版纳'],
+  Y:['银川','烟台','扬州','宜昌','宜宾','义乌','延安','盐城','阳江','阳泉','伊春','伊犁','营口','永州','玉林','榆林','玉溪','岳阳','运城'],
+  Z:['郑州','珠海','中山','镇江','舟山','湛江','肇庆','张家界','张家口','张掖','漳州','昭通','枣庄','株洲','淄博','自贡','遵义']
+};
+const CITY_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const POPULAR_CITIES = ['北京','上海','广州','深圳','杭州','成都','南京','重庆','武汉','西安','苏州','天津'];
+const DEMO_CITY_COORDS = [
+  ['上海',31.2304,121.4737], ['杭州',30.2741,120.1551], ['苏州',31.2989,120.5853],
+  ['南京',32.0603,118.7969], ['北京',39.9042,116.4074], ['广州',23.1291,113.2644],
+  ['深圳',22.5431,114.0579], ['成都',30.5728,104.0668], ['重庆',29.5630,106.5516],
+  ['武汉',30.5928,114.3055], ['西安',34.3416,108.9398], ['天津',39.0842,117.2009]
+];
+
+const state = {
+  scenario: 'sea', view: 'discover', forced: 'normal', origin: '', budget: '', days: '',
+  originSource: '', locationStatus: 'idle', detectedOrigin: '', cityPickerOpen: false, pendingFields: []
+};
 const screen = document.getElementById('screen');
 const viewTitle = document.getElementById('view-title');
 const viewKicker = document.getElementById('view-kicker');
@@ -40,6 +76,107 @@ function escapeHtml(value) {
   return String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
 }
 
+function resetScenarioInputs() {
+  const scenario = scenarios[state.scenario];
+  state.origin = scenario.origin || '';
+  state.budget = scenario.budget ?? '';
+  state.days = scenario.days ?? '';
+  state.originSource = scenario.origin ? 'preset' : '';
+  state.locationStatus = 'idle';
+  state.detectedOrigin = '';
+  state.cityPickerOpen = false;
+  state.pendingFields = [];
+}
+
+function missingRequiredFields() {
+  const missing = [];
+  if (!String(state.origin || '').trim()) missing.push('origin');
+  if (state.budget === '' || state.budget === null || Number(state.budget) < 0) missing.push('budget');
+  if (state.days === '' || state.days === null || Number(state.days) < 1) missing.push('days');
+  return missing;
+}
+
+function locationCopy() {
+  if (state.locationStatus === 'locating') return ['正在获取当前位置', '坐标只在浏览器内用于匹配演示城市', '定位中'];
+  if (state.locationStatus === 'located' && state.origin) return [`已定位：${state.origin}`, '本地近似匹配，不上传坐标', '重新定位'];
+  if (state.locationStatus === 'denied') return ['定位权限未开启', '可通过搜索或 A–Z 选择城市', '重试'];
+  if (state.locationStatus === 'failed') return ['暂时无法获取位置', '可通过搜索或 A–Z 选择城市', '重试'];
+  if (state.originSource === 'manual' && state.origin) return ['未使用当前位置', `当前手动选择：${state.origin}`, '定位'];
+  return ['使用当前位置', '定位优先，也可以手动选择城市', '定位'];
+}
+
+function renderOriginControl(compact = false) {
+  const [title, detail, action] = locationCopy();
+  const selected = state.origin ? `<span class="origin-selected">${escapeHtml(state.origin)}出发 · ${state.originSource === 'location' ? '已定位' : '已选择'}</span>` : '';
+  return `<div class="origin-control ${compact ? 'compact' : ''}">
+    <button class="location-choice ${state.locationStatus === 'located' ? 'located' : ''}" type="button" data-action="locate">
+      <span class="location-dot" aria-hidden="true">◎</span><span><b>${escapeHtml(title)}</b><small>${escapeHtml(detail)}</small></span><i>${escapeHtml(action)}</i>
+    </button>
+    <button class="city-choice" type="button" data-action="open-city"><span><b>${state.originSource === 'manual' && state.origin ? escapeHtml(state.origin) : '选择出发城市'}</b><small>搜索 · 热门城市 · A–Z</small></span><i>›</i></button>
+    ${selected}
+  </div>`;
+}
+
+function renderCityPickerDialog() {
+  if (!state.cityPickerOpen) return '';
+  const sections = Object.entries(CITY_GROUPS).map(([letter, cities]) => `
+    <section class="city-group" id="city-section-${letter}" data-city-group="${letter}">
+      <h4>${letter}</h4><div class="city-grid">${cities.map(city => `<button type="button" data-city="${city}" data-letter="${letter}">${city}</button>`).join('')}</div>
+    </section>`).join('');
+  return `<div class="city-picker-backdrop" role="presentation">
+    <section class="city-picker-dialog" role="dialog" aria-modal="true" aria-labelledby="city-picker-title">
+      <header><div><small>MANUAL ORIGIN</small><h3 id="city-picker-title">选择出发城市</h3></div><button type="button" data-action="close-city" aria-label="关闭城市选择">×</button></header>
+      <label class="city-search"><span aria-hidden="true">⌕</span><input id="city-search" type="search" placeholder="输入中文城市名或首字母" autocomplete="off"></label>
+      <div class="city-picker-body">
+        <div class="city-picker-list" id="city-picker-list">
+          ${state.detectedOrigin ? `<section class="city-group current-city"><h4>当前定位</h4><div class="city-grid"><button type="button" data-city="${escapeHtml(state.detectedOrigin)}" data-letter="">${escapeHtml(state.detectedOrigin)} · 当前</button></div></section>` : ''}
+          <section class="city-group" data-city-group="HOT"><h4>热门城市</h4><div class="city-grid">${POPULAR_CITIES.map(city => `<button type="button" data-city="${city}" data-letter="HOT">${city}</button>`).join('')}</div></section>
+          ${sections}
+          <p class="city-empty" id="city-empty" hidden>没有找到这个城市，请输入中文城市名或首字母。</p>
+        </div>
+        <nav class="city-index" aria-label="城市首字母索引">${CITY_ALPHABET.map(letter => `<button type="button" data-city-letter="${letter}" ${CITY_GROUPS[letter] ? '' : 'disabled'}>${letter}</button>`).join('')}</nav>
+      </div>
+      <footer>公开 Demo 不上传或保存定位坐标；本地完整模式通过高德逆地理编码识别城市。</footer>
+    </section>
+  </div>`;
+}
+
+function nearestDemoCity(latitude, longitude) {
+  let nearest = DEMO_CITY_COORDS[0];
+  let best = Number.POSITIVE_INFINITY;
+  DEMO_CITY_COORDS.forEach(item => {
+    const distance = ((item[1] - latitude) ** 2) + ((item[2] - longitude) ** 2);
+    if (distance < best) { best = distance; nearest = item; }
+  });
+  return nearest[0];
+}
+
+function requestDemoLocation() {
+  state.locationStatus = 'locating';
+  render();
+  if (!navigator.geolocation) {
+    state.locationStatus = 'failed';
+    state.cityPickerOpen = true;
+    render();
+    setTimeout(() => document.getElementById('city-search')?.focus(), 0);
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(position => {
+    const city = nearestDemoCity(position.coords.latitude, position.coords.longitude);
+    state.origin = city;
+    state.detectedOrigin = city;
+    state.originSource = 'location';
+    state.locationStatus = 'located';
+    state.cityPickerOpen = false;
+    render();
+  }, error => {
+    state.locationStatus = error && error.code === 1 ? 'denied' : 'failed';
+    state.cityPickerOpen = true;
+    render();
+    setTimeout(() => document.getElementById('city-search')?.focus(), 0);
+  }, {enableHighAccuracy:false, timeout:8000, maximumAge:600000});
+}
+
 function setActive(selector, attribute, value) {
   document.querySelectorAll(selector).forEach(button => button.classList.toggle('active', button.dataset[attribute] === value));
 }
@@ -49,24 +186,35 @@ function renderDiscover(scenario) {
     <label for="demo-query">你的旅行灵感</label>
     <textarea id="demo-query">${escapeHtml(scenario.query)}</textarea>
     <div class="fields">
-      <div class="field"><label for="demo-origin">从哪里出发</label><select id="demo-origin"><option value="">请选择</option>${['上海','杭州','苏州','南京'].map(city => `<option ${city === (state.clarifiedOrigin || scenario.origin) ? 'selected' : ''}>${city}</option>`).join('')}</select></div>
-      <div class="field"><label for="demo-budget">人均预算</label><input id="demo-budget" type="number" value="${scenario.budget}"></div>
-      <div class="field"><label for="demo-days">天数</label><input id="demo-days" type="number" value="${scenario.days}"></div>
+      <div class="field origin-field"><label>从哪里出发 <em>必填</em></label>${renderOriginControl()}</div>
+      <div class="field"><label for="demo-budget">人均预算 <em>必填</em></label><input id="demo-budget" type="number" min="0" value="${state.budget}" placeholder="例如 1000" aria-required="true"></div>
+      <div class="field"><label for="demo-days">天数 <em>必填</em></label><input id="demo-days" type="number" min="1" value="${state.days}" placeholder="例如 2" aria-required="true"></div>
     </div>
-    <div class="action-row"><button class="primary-button" type="button" data-action="run">生成可信灵感 →</button><span class="action-note">公开版仅运行三个合成引导场景</span></div>
+    <div class="action-row"><button class="primary-button" type="button" data-action="run">生成可信灵感 →</button><span class="action-note">三项硬条件可从自然语言或控件获得；缺失时一次问全</span></div>
     <p id="custom-warning" class="custom-warning" hidden>自由输入需要本地完整模式；本页不会把固定结果伪装成 AI 自由生成。</p>
   </div>
   <div class="intent-preview">
     <div><small>情绪目标</small><b>${scenario.intent[0]}</b></div>
     <div><small>氛围偏好</small><b>${scenario.intent[1]}</b></div>
     <div><small>活动线索</small><b>${scenario.intent[2]}</b></div>
-  </div>`;
+  </div>${renderCityPickerDialog()}`;
 }
 
 function renderClarify(scenario) {
-  const origin = state.clarifiedOrigin || scenario.origin;
-  if (origin) return `<div class="clarify-card"><div class="question-mark">✓</div><h3>出发城市已确认：${origin}</h3><p>预算和天数属于可降级信息，不再增加第二轮追问。</p><button class="primary-button" type="button" data-action="process">继续生成推荐 →</button></div>`;
-  return `<div class="clarify-card"><div class="question-mark">?</div><h3>你从哪座城市出发？</h3><p>出发地会决定两天内是否真的可达，这是当前唯一阻断推荐的槽位。</p><div class="city-row">${['上海','杭州','苏州','南京'].map(city => `<button type="button" data-city="${city}">${city}</button>`).join('')}</div></div>`;
+  const fields = state.pendingFields.length ? state.pendingFields : missingRequiredFields();
+  if (!fields.length) return `<div class="clarify-card"><div class="question-mark">✓</div><h3>三项硬条件已经确认</h3><p>${escapeHtml(state.origin)}出发 · 人均 ${state.budget} 元 · ${state.days} 天。系统现在可以进入事实过滤与排序。</p><button class="primary-button" type="button" data-action="process">继续生成推荐 →</button></div>${renderCityPickerDialog()}`;
+  const stillMissing = missingRequiredFields();
+  const fieldNames = fields.map(field => ({origin:'出发城市', budget:'人均预算', days:'出行天数'}[field]));
+  const budgetOptions = [500, 1000, 2000, 3000];
+  const dayOptions = [1, 2, 3, 4];
+  return `<div class="clarify-card clarify-required"><div class="question-mark">?</div><h3>还差 ${fieldNames.length} 个硬条件，一次确认完成</h3><p>需要补齐${fieldNames.join('、')}，否则系统无法执行预算、天数与可达性过滤。</p>
+    <div class="clarify-required-fields">
+      ${fields.includes('origin') ? `<div class="clarify-field"><b>出发城市 <em>必填</em></b>${renderOriginControl(true)}</div>` : ''}
+      ${fields.includes('budget') ? `<div class="clarify-field"><b>人均预算 <em>必填</em></b><div class="required-chips">${budgetOptions.map(value => `<button type="button" data-clarify-budget="${value}" class="${Number(state.budget) === value ? 'selected' : ''}">${value === 3000 ? '3000+' : value} 元</button>`).join('')}</div></div>` : ''}
+      ${fields.includes('days') ? `<div class="clarify-field"><b>出行天数 <em>必填</em></b><div class="required-chips">${dayOptions.map(value => `<button type="button" data-clarify-days="${value}" class="${Number(state.days) === value ? 'selected' : ''}">${value === 4 ? '4 天+' : `${value} 天`}</button>`).join('')}</div></div>` : ''}
+    </div>
+    <button class="primary-button clarify-submit" type="button" data-action="process" ${stillMissing.length ? 'disabled' : ''}>确认条件并开始推荐 →</button>
+  </div>${renderCityPickerDialog()}`;
 }
 
 function renderTrace(scenario, active = 4) {
@@ -128,7 +276,7 @@ function render() {
 
 document.getElementById('scenario-switcher').addEventListener('click', event => {
   const button = event.target.closest('[data-scenario]'); if (!button) return;
-  state.scenario = button.dataset.scenario; state.view = 'discover'; state.forced = 'normal'; state.clarifiedOrigin = ''; render();
+  state.scenario = button.dataset.scenario; state.view = 'discover'; state.forced = 'normal'; resetScenarioInputs(); render();
 });
 document.getElementById('state-switcher').addEventListener('click', event => {
   const button = event.target.closest('[data-state]'); if (!button) return;
@@ -136,7 +284,9 @@ document.getElementById('state-switcher').addEventListener('click', event => {
 });
 document.querySelector('.product-nav').addEventListener('click', event => {
   const button = event.target.closest('[data-view]'); if (!button) return;
-  state.view = button.dataset.view; state.forced = 'normal'; render();
+  state.view = button.dataset.view; state.forced = 'normal';
+  if (state.view === 'clarify') state.pendingFields = missingRequiredFields();
+  render();
 });
 screen.addEventListener('click', event => {
   const action = event.target.closest('[data-action]');
@@ -144,19 +294,63 @@ screen.addEventListener('click', event => {
     if (action.dataset.action === 'run') {
       const scenario = scenarios[state.scenario];
       const query = document.getElementById('demo-query')?.value.trim();
-      const origin = document.getElementById('demo-origin')?.value;
+      const budgetValue = document.getElementById('demo-budget')?.value ?? '';
+      const daysValue = document.getElementById('demo-days')?.value ?? '';
+      state.budget = budgetValue === '' ? '' : Number(budgetValue);
+      state.days = daysValue === '' ? '' : Number(daysValue);
       if (query !== scenario.query) { document.getElementById('custom-warning').hidden = false; return; }
-      if (!origin) { state.view = 'clarify'; render(); return; }
-      state.clarifiedOrigin = origin; state.view = scenario.results.length ? 'trace' : 'results'; render();
-    } else if (action.dataset.action === 'process') { state.view = 'trace'; render(); }
-    else { state.view = 'discover'; state.forced = 'normal'; render(); }
+      const missing = missingRequiredFields();
+      if (missing.length) { state.pendingFields = missing; state.view = 'clarify'; render(); return; }
+      state.pendingFields = []; state.view = scenario.results.length ? 'trace' : 'results'; render();
+    } else if (action.dataset.action === 'process') {
+      if (missingRequiredFields().length) return;
+      state.pendingFields = []; state.view = 'trace'; render();
+    } else if (action.dataset.action === 'locate') {
+      requestDemoLocation(); return;
+    } else if (action.dataset.action === 'open-city') {
+      state.cityPickerOpen = true; render(); setTimeout(() => document.getElementById('city-search')?.focus(), 0); return;
+    } else if (action.dataset.action === 'close-city') {
+      state.cityPickerOpen = false; render(); return;
+    } else if (action.dataset.action === 'reset') {
+      state.view = 'discover'; state.forced = 'normal'; render();
+    }
   }
   const city = event.target.closest('[data-city]');
-  if (city) { state.clarifiedOrigin = city.dataset.city; render(); }
+  if (city) {
+    state.origin = city.dataset.city;
+    state.originSource = 'manual';
+    state.locationStatus = 'manual';
+    state.cityPickerOpen = false;
+    render();
+  }
+  const budget = event.target.closest('[data-clarify-budget]');
+  if (budget) { state.budget = Number(budget.dataset.clarifyBudget); render(); }
+  const days = event.target.closest('[data-clarify-days]');
+  if (days) { state.days = Number(days.dataset.clarifyDays); render(); }
+  const cityLetter = event.target.closest('[data-city-letter]');
+  if (cityLetter) document.getElementById(`city-section-${cityLetter.dataset.cityLetter}`)?.scrollIntoView({behavior:'smooth', block:'start'});
   const toggle = event.target.closest('[data-evidence]');
   if (toggle) { const detail = document.getElementById(`evidence-${toggle.dataset.evidence}`); detail.hidden = !detail.hidden; toggle.setAttribute('aria-expanded', String(!detail.hidden)); toggle.lastElementChild.textContent = detail.hidden ? '＋' : '－'; }
   const feedback = event.target.closest('[data-feedback]');
   if (feedback) { feedback.parentElement.querySelectorAll('button').forEach(btn => btn.classList.remove('selected')); feedback.classList.add('selected'); feedback.textContent = feedback.dataset.feedback === 'want' ? '已标记想去 ✓' : feedback.dataset.feedback === 'not' ? '已记录不感兴趣 ✓' : '已进入纠错队列 ✓'; }
+});
+
+screen.addEventListener('input', event => {
+  if (event.target.id !== 'city-search') return;
+  const query = event.target.value.trim();
+  const upper = query.toUpperCase();
+  let matches = 0;
+  screen.querySelectorAll('.city-group').forEach(group => {
+    let groupMatches = 0;
+    group.querySelectorAll('[data-city]').forEach(button => {
+      const visible = !query || button.dataset.city.includes(query) || (upper.length === 1 && button.dataset.letter === upper);
+      button.hidden = !visible;
+      if (visible) { groupMatches += 1; matches += 1; }
+    });
+    group.hidden = groupMatches === 0;
+  });
+  const empty = document.getElementById('city-empty');
+  if (empty) empty.hidden = matches > 0;
 });
 
 document.querySelectorAll('[data-jump]').forEach(button => button.addEventListener('click', () => {
@@ -165,6 +359,12 @@ document.querySelectorAll('[data-jump]').forEach(button => button.addEventListen
 }));
 document.getElementById('demo-help').addEventListener('click', event => {
   const panel = document.getElementById('demo-help-panel'); panel.hidden = !panel.hidden; event.currentTarget.setAttribute('aria-expanded', String(!panel.hidden));
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && state.cityPickerOpen) {
+    state.cityPickerOpen = false;
+    render();
+  }
 });
 
 const sections = [...document.querySelectorAll('.case-section[id], .case-section h3[id]')];
@@ -176,4 +376,5 @@ if ('IntersectionObserver' in window) {
   sections.forEach(section => observer.observe(section));
 }
 
+resetScenarioInputs();
 render();

@@ -1,7 +1,7 @@
 # InspiTrip · 感觉驱动的可信旅行推荐
 
 [![GitHub Pages](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-15803D)](https://hai-chao-ren.github.io/InspriTrip/)
-[![Tests](https://img.shields.io/badge/tests-205%20passing-059669)](#测试)
+[![Tests](https://img.shields.io/badge/tests-208%20passing-059669)](#测试)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-0F172A)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-D97706)](LICENSE)
 
@@ -41,7 +41,8 @@ flowchart LR
 
 关键产品决策：
 
-- 默认直接推荐，只在缺少阻断槽位时追问一次。
+- Query Plan 先从自然语言提取出发城市、预算和天数；仍有缺失时用一张澄清卡一次问全。
+- 出发城市优先使用浏览器定位，拒绝或失败后可搜索、选择热门城市或使用 A–Z 城市索引。
 - 使用 Workflow，而不是开放式 ReAct Agent，以确定性换取可信度。
 - Dify 负责语义召回，PostgreSQL/JSONL 负责事实、排序与证据。
 - LLM 只生成受限理由；预算、交通、限制和降级提示由代码渲染。
@@ -126,7 +127,7 @@ python -m unittest discover -s tests/api -q
 python -m unittest discover -s tests/quality -q
 ```
 
-当前共 205 项测试，覆盖 Query Plan、Query State、过滤排序、MMR、证据门控、输出忠实度、UGC 管道、数据库契约、API 双模式和公开仓库安全边界。
+当前共 208 项测试，覆盖 Query Plan、Query State、过滤排序、MMR、证据门控、输出忠实度、UGC 管道、数据库契约、API 双模式和公开仓库安全边界。
 
 ## 仓库结构
 
@@ -139,7 +140,7 @@ schemas/                  JSON Schema 数据合同
 workflows/dify/           脱敏后的 Dify 模板
 data/demo/                合成公开数据
 docs/                     产品与工程案例说明
-tests/                    205 项自动化测试
+tests/                    208 项自动化测试
 ```
 
 ## 延伸阅读

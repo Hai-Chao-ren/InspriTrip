@@ -12,6 +12,16 @@ HARD_SCALARS = (
     "hard_constraints.budget_max",
     "hard_constraints.travel_time_max",
 )
+REQUIRED_HARD_SLOTS = (
+    "hard_constraints.origin",
+    "hard_constraints.budget_max",
+    "hard_constraints.days_max",
+)
+REQUIRED_SLOT_LABELS = {
+    "hard_constraints.origin": "出发城市",
+    "hard_constraints.budget_max": "人均预算",
+    "hard_constraints.days_max": "出行天数",
+}
 HARD_ARRAYS = (
     "hard_constraints.transport_modes",
     "hard_constraints.must_have_activities",
@@ -243,8 +253,27 @@ def merge_query_plan(
     return normalize_query_plan(merged)
 
 
+def missing_required_hard_slots(plan: dict[str, Any]) -> list[str]:
+    """Return missing business-required slots after query and form values merge."""
+    normalized = normalize_query_plan(plan)
+    return [slot for slot in REQUIRED_HARD_SLOTS if _get(normalized, slot) in (None, "")]
+
+
+def build_required_clarification_question(missing_slots: Iterable[str], *, repeated: bool = False) -> str:
+    labels = [REQUIRED_SLOT_LABELS[slot] for slot in missing_slots if slot in REQUIRED_SLOT_LABELS]
+    if not labels:
+        return ""
+    if len(labels) == 1:
+        label_text = labels[0]
+    else:
+        label_text = "、".join(labels[:-1]) + "和" + labels[-1]
+    if repeated:
+        return f"还需要补齐{label_text}，确认后才能生成可执行的目的地推荐。"
+    return f"为了给出可执行的推荐，还需要确认{label_text}。我会一次问全，不让你逐项来回补充。"
+
+
 def decide_clarification(plan: dict[str, Any], clarification_count: int) -> dict[str, Any]:
-    """Ask only when a missing slot materially blocks a stated hard constraint."""
+    """Block retrieval until origin, budget and days are all confirmed."""
     normalized = normalize_query_plan(plan)
     count = max(0, int(clarification_count or 0))
     if normalized["scope"] != "in_domain" or normalized["task_type"] not in {"destination_discovery", "experience_lookup"}:
@@ -254,10 +283,7 @@ def decide_clarification(plan: dict[str, Any], clarification_count: int) -> dict
             "missing_slots": [],
             "reason": "route_does_not_need_retrieval",
         }
-    hard = normalized["hard_constraints"]
-    missing: list[str] = []
-    if hard["travel_time_max"] is not None and not hard["origin"]:
-        missing.append("hard_constraints.origin")
+    missing = missing_required_hard_slots(normalized)
     if not missing:
         return {
             "should_clarify": False,
@@ -265,16 +291,9 @@ def decide_clarification(plan: dict[str, Any], clarification_count: int) -> dict
             "missing_slots": [],
             "reason": "enough_information",
         }
-    if count >= 1:
-        return {
-            "should_clarify": False,
-            "question": None,
-            "missing_slots": missing,
-            "reason": "clarification_limit_reached",
-        }
     return {
         "should_clarify": True,
-        "question": "你希望从哪里出发？有了出发地，我才能判断是否满足你说的到达时间。",
+        "question": build_required_clarification_question(missing, repeated=count >= 1),
         "missing_slots": missing,
-        "reason": "missing_blocking_slot",
+        "reason": "required_slots_still_missing" if count >= 1 else "missing_required_slots",
     }

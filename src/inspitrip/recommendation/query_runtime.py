@@ -116,8 +116,8 @@ def resolve_query_turn(
         clarification_count = state.clarification_count
 
     clarification = decide_clarification(merged, clarification_count)
-    if clarification.get("should_clarify"):
-        clarification_count += 1
+    if clarification.get("should_clarify") and clarification_count < 1:
+        clarification_count = 1
     if store is not None:
         store.set(conversation_id, merged, clarification_count)
     return {

@@ -173,14 +173,14 @@
             <thead><tr><th>输入</th><th>类型</th><th>设计目的</th></tr></thead>
             <tbody>
               <tr><td><code>query</code></td><td>必填文本</td><td>承载情绪、氛围、活动、排斥项与自由表达</td></tr>
-              <tr><td><code>origin</code></td><td>条件必填</td><td>决定交通可达性，是当前唯一阻断槽位</td></tr>
-              <tr><td><code>budget / days</code></td><td>可选数字</td><td>用于硬过滤；缺失时允许带假设推荐</td></tr>
+              <tr><td><code>origin</code></td><td>硬槽位</td><td>优先浏览器定位；拒绝或失败后通过搜索、热门城市与 A–Z 选择，也可从 Query 提取</td></tr>
+              <tr><td><code>budget / days</code></td><td>硬槽位</td><td>可从自然语言或控件获得；任一缺失都进入一次问全的澄清卡</td></tr>
               <tr><td><code>conversation_id</code></td><td>可选标识</td><td>支持多轮修改与 Query State 延续</td></tr>
             </tbody>
           </table>
 
           <h3 id="requirements-clarify">2.2 渐进澄清</h3>
-          <p><b>核心逻辑：</b>默认优先生成结果，只在缺少会阻断推荐的字段时追问一次。出发地缺失时询问“从哪座城市出发”；预算和天数缺失时不连续盘问，而是在结果中标记假设。</p>
+          <p><b>核心逻辑：</b>先合并自然语言抽取结果、定位结果与表单输入，再检查出发城市、人均预算和出行天数。缺失字段全部进入同一张澄清卡一次问全；三项未补齐前不启动候选召回。</p>
 
           <h3 id="requirements-plan">2.3 Query Plan 意图结构化</h3>
           <p><b>输出结构：</b>将原始 Query 转为 <code>scope</code>、<code>task_type</code>、<code>hard_constraints</code>、<code>exclusions</code>、<code>semantic_query</code>、<code>soft_preferences</code> 和 <code>evidence_aspects</code>。Schema 禁止额外字段，标签带置信度，否定项与正向偏好分离。</p>
@@ -237,7 +237,7 @@
           <h3 id="flow-main">4.1 单次推荐核心流程</h3>
           <ol class="numbered-flow">
             <li><b>接收需求</b><span>前端提交 query、origin、budget、days 与 conversation_id。</span></li>
-            <li><b>校验与澄清</b><span>Pydantic 校验请求；缺少出发地时返回 needs_clarification，不启动推荐。</span></li>
+            <li><b>校验与澄清</b><span>合并 Query、定位与表单值；origin、budget、days 任一缺失时返回 needs_clarification，一次问全。</span></li>
             <li><b>生成 Query Plan</b><span>模型输出通过 JSON Schema 校验；异常时使用规则解析兜底。</span></li>
             <li><b>召回候选</b><span>Dify 执行 BM25、Dense 与 Reranker，输出 destination_id 和语义分数。</span></li>
             <li><b>补齐事实</b><span>Repository 从 JSONL / PostgreSQL 读取地点、预算、交通、画像与 Claim。</span></li>
@@ -259,7 +259,7 @@
           <table class="doc-table fallback-table">
             <thead><tr><th>失败点</th><th>系统判断</th><th>用户侧兜底</th></tr></thead>
             <tbody>
-              <tr><td>缺少出发地</td><td>无法判断可达性</td><td>只追问一次关键字段，不进入错误推荐</td></tr>
+              <tr><td>缺少硬槽位</td><td>origin / budget / days 任一为空</td><td>把所有缺失项放进同一张澄清卡，补齐前不进入推荐</td></tr>
               <tr><td>模型输出不符合 Schema</td><td>Query Plan 不可执行</td><td>使用规则解析 fallback，并保留原始输入</td></tr>
               <tr><td>候选不满足硬约束</td><td>可用结果为 0</td><td>返回空结果，指出应放宽的预算、天数或活动条件</td></tr>
               <tr><td>Claim 证据不足</td><td>理由缺少支持</td><td>候选降级或移除，不生成看似合理的文案</td></tr>
@@ -281,7 +281,7 @@
               <tr><td>库存覆盖</td><td>有效目的地可被召回与排序</td><td><b>60 个 · 100%</b></td><td><span class="status-pass">通过</span></td></tr>
               <tr><td>后端性能</td><td>不含外部实时服务的 P95</td><td><b>0.667s</b></td><td><span class="status-pass">通过</span></td></tr>
               <tr><td>完整链路性能</td><td>Dify blocking 工作流 P95</td><td><b>20.785s</b></td><td><span class="status-risk">待优化</span></td></tr>
-              <tr><td>工程质量</td><td>推荐、管道、数据库、API 与公开边界</td><td><b>205 项测试</b></td><td><span class="status-pass">CI 通过</span></td></tr>
+              <tr><td>工程质量</td><td>推荐、管道、数据库、API 与公开边界</td><td><b>208 项测试</b></td><td><span class="status-pass">CI 通过</span></td></tr>
               <tr><td>公开可运行性</td><td>全新克隆、无密钥 Demo 与 Pages</td><td><b>零密钥启动</b></td><td><span class="status-pass">通过</span></td></tr>
             </tbody>
           </table>

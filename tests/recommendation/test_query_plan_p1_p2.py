@@ -237,19 +237,26 @@ class QueryStateP2Tests(unittest.TestCase):
         self.assertIn("act_hike", merged["exclusions"])
         self.assertIn("act_sea", merged["hard_constraints"]["must_have_activities"])
 
-    def test_clarifies_missing_origin_once_only(self) -> None:
+    def test_clarifies_all_missing_required_slots_in_one_turn(self) -> None:
         plan = build_rule_query_plan("想找三小时内能到的地方")
         first = decide_clarification(plan, 0)
         self.assertTrue(first["should_clarify"])
-        self.assertEqual(["hard_constraints.origin"], first["missing_slots"])
+        self.assertEqual(
+            [
+                "hard_constraints.origin",
+                "hard_constraints.budget_max",
+                "hard_constraints.days_max",
+            ],
+            first["missing_slots"],
+        )
         second = decide_clarification(plan, 1)
-        self.assertFalse(second["should_clarify"])
-        self.assertEqual("clarification_limit_reached", second["reason"])
+        self.assertTrue(second["should_clarify"])
+        self.assertEqual("required_slots_still_missing", second["reason"])
 
-    def test_does_not_clarify_non_blocking_missing_slots(self) -> None:
+    def test_clarifies_required_slots_even_without_travel_time_constraint(self) -> None:
         decision = decide_clarification(build_rule_query_plan("想放松一下"), 0)
-        self.assertFalse(decision["should_clarify"])
-        self.assertEqual("enough_information", decision["reason"])
+        self.assertTrue(decision["should_clarify"])
+        self.assertEqual("missing_required_slots", decision["reason"])
 
     def test_query_state_schema_accepts_one_clarification_state(self) -> None:
         schema = json.loads(STATE_SCHEMA_PATH.read_text(encoding="utf-8"))

@@ -26,7 +26,7 @@ class ApiContractTests(unittest.TestCase):
         self.assertIn("InspiTrip", response.text)
         self.assertIn("合成数据交互演示", response.text)
 
-    def test_demo_chat_requests_origin_before_ranking(self) -> None:
+    def test_demo_chat_requests_all_missing_hard_slots_before_ranking(self) -> None:
         response = self.client.post(
             "/api/v2/chat",
             json={"query": "想安静看海", "user": "contract-test"},
@@ -35,6 +35,30 @@ class ApiContractTests(unittest.TestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual("message", payload["kind"])
         self.assertEqual("origin", payload["needs_clarification"]["field"])
+        self.assertEqual(["origin", "budget", "days"], payload["needs_clarification"]["fields"])
+        self.assertEqual("ask_all_once", payload["needs_clarification"]["mode"])
+
+    def test_demo_chat_requests_only_the_still_missing_hard_slots(self) -> None:
+        response = self.client.post(
+            "/api/v2/chat",
+            json={"query": "想安静看海", "origin": "上海", "user": "contract-test"},
+        )
+        payload = response.json()
+        self.assertEqual("message", payload["kind"])
+        self.assertEqual(["budget", "days"], payload["needs_clarification"]["fields"])
+
+    def test_demo_chat_extracts_required_slots_from_natural_language(self) -> None:
+        response = self.client.post(
+            "/api/v2/chat",
+            json={
+                "query": "上海出发，人均1000元，玩两天，想安静看海",
+                "user": "contract-test",
+            },
+        )
+        payload = response.json()
+        self.assertEqual(200, response.status_code)
+        self.assertEqual("recommendations", payload["kind"])
+        self.assertNotIn("needs_clarification", payload)
 
     def test_demo_chat_returns_structured_recommendations(self) -> None:
         response = self.client.post(
@@ -87,8 +111,11 @@ class ApiContractTests(unittest.TestCase):
             },
         )
         self.assertEqual(200, response.status_code)
-        self.assertTrue(response.json()["ok"])
-        self.assertIn("query_plan", response.json())
+        payload = response.json()
+        self.assertTrue(payload["ok"])
+        self.assertIn("query_plan", payload)
+        self.assertEqual(["hard_constraints.budget_max"], payload["clarification"]["missing_slots"])
+        self.assertFalse(payload["enter_retrieval"])
 
     def test_rank_candidates_uses_demo_inventory(self) -> None:
         plan = build_rule_query_plan(

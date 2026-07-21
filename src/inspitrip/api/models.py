@@ -7,9 +7,23 @@ from pydantic import BaseModel, Field
 
 class FrontendChatRequest(BaseModel):
     query: str = Field(min_length=1, max_length=2000)
-    origin: str | None = Field(default=None, max_length=40)
-    budget: int | None = Field(default=None, ge=0, le=1_000_000)
-    days: int | None = Field(default=None, ge=1, le=365)
+    origin: str | None = Field(
+        default=None,
+        max_length=40,
+        description="业务必需槽位；可由 Query 提取、浏览器定位或手动选城提供。",
+    )
+    budget: int | None = Field(
+        default=None,
+        ge=0,
+        le=1_000_000,
+        description="业务必需槽位；请求字段可空，但合并 Query Plan 后缺失时必须澄清。",
+    )
+    days: int | None = Field(
+        default=None,
+        ge=1,
+        le=365,
+        description="业务必需槽位；请求字段可空，但合并 Query Plan 后缺失时必须澄清。",
+    )
     conversation_id: str = Field(default="", max_length=128)
     user: str = Field(default="inspitrip-web", min_length=1, max_length=128)
 

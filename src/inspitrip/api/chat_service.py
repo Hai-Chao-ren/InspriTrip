@@ -11,6 +11,7 @@ from inspitrip.api.models import FrontendChatRequest
 from inspitrip.api.settings import RuntimeSettings
 from inspitrip.paths import DEMO_DATA_DIR
 from inspitrip.recommendation.query_plan import build_rule_query_plan
+from inspitrip.recommendation.query_state import REQUIRED_SLOT_LABELS, decide_clarification
 from inspitrip.recommendation.repository import JsonlRecommendationRepository
 from inspitrip.recommendation.service import rank_retrieval_items
 
@@ -22,6 +23,11 @@ _EMPTY_MARKERS = (
     "没有通过准入的匹配证据",
     "当前没有可安全输出的推荐结果",
 )
+_PUBLIC_SLOT_FIELDS = {
+    "hard_constraints.origin": "origin",
+    "hard_constraints.budget_max": "budget",
+    "hard_constraints.days_max": "days",
+}
 
 
 def _display_name(value: Any) -> str:
@@ -87,24 +93,60 @@ def _card(row: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _clarification_response(
+    *,
+    plan: dict[str, Any],
+    conversation_id: str,
+    demo: bool,
+) -> dict[str, Any] | None:
+    clarification = decide_clarification(plan, 0)
+    if not clarification.get("should_clarify"):
+        return None
+    missing_slots = list(clarification.get("missing_slots") or [])
+    fields = [_PUBLIC_SLOT_FIELDS[slot] for slot in missing_slots if slot in _PUBLIC_SLOT_FIELDS]
+    slots = [
+        {
+            "field": _PUBLIC_SLOT_FIELDS[slot],
+            "label": REQUIRED_SLOT_LABELS[slot],
+            "input": "location_or_city" if slot.endswith("origin") else "number",
+        }
+        for slot in missing_slots
+        if slot in _PUBLIC_SLOT_FIELDS
+    ]
+    first = slots[0] if slots else {"field": "", "label": "", "input": ""}
+    return {
+        "ok": True,
+        "kind": "message",
+        "answer": str(clarification.get("question") or ""),
+        "recommendations": [],
+        "conversation_id": conversation_id,
+        "message_id": f"msg-{uuid.uuid4().hex[:12]}",
+        "needs_clarification": {
+            "field": first["field"],
+            "label": first["label"],
+            "fields": fields,
+            "slots": slots,
+            "mode": "ask_all_once",
+        },
+        "query_plan": plan,
+        "demo": demo,
+    }
+
+
 def demo_chat(request: FrontendChatRequest) -> dict[str, Any]:
     query = request.query.strip()
     conversation_id = request.conversation_id.strip() or f"demo-{uuid.uuid4().hex[:16]}"
-    if not request.origin:
-        return {
-            "ok": True,
-            "kind": "message",
-            "answer": "先告诉我从哪座城市出发，我才能判断两天内是否真的可达。",
-            "recommendations": [],
-            "conversation_id": conversation_id,
-            "message_id": f"msg-{uuid.uuid4().hex[:12]}",
-            "needs_clarification": {"field": "origin", "label": "出发城市"},
-            "demo": True,
-        }
     plan = build_rule_query_plan(
         query,
         form_values={"origin": request.origin, "budget": request.budget, "days": request.days},
     )
+    clarification_response = _clarification_response(
+        plan=plan,
+        conversation_id=conversation_id,
+        demo=True,
+    )
+    if clarification_response is not None:
+        return clarification_response
     ranked = rank_retrieval_items(
         raw_query=query,
         query_plan_payload=plan,
