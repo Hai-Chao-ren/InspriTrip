@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InspiTrip UGC 证据 Schema",
+  "description": "每条来源笔记一行，通过 poi_id 关联 POI 主表（多对一）。支撑验证悖论指标：交叉印证覆盖率、新鲜度加权、孤证软广过滤（docs/05 §3.2）。仅存公开元数据，不存用户隐私。",
+  "type": "object",
+  "required": ["evidence_id", "poi_id", "source_platform", "source_url", "publish_date", "collected_date"],
+  "properties": {
+    "evidence_id": { "type": "string", "description": "唯一主键，如 EV_001" },
+    "poi_id": { "type": "string", "description": "外键，关联 poi_seed 表的 poi_id" },
+
+    "source_platform": { "type": "string", "enum": ["小红书", "其他"], "description": "来源平台" },
+    "source_url": { "type": "string", "description": "笔记公开链接，可追溯可删除" },
+    "note_title": { "type": "string", "description": "笔记标题（公开信息）" },
+    "note_id": { "type": "string", "description": "原始笔记主键" },
+    "author_hash": { "type": "string", "description": "作者标识的匿名哈希，禁存真实昵称/主页，仅用于判断是否独立来源" },
+
+    "likes": { "type": "integer", "description": "公开点赞数，作热度参考" },
+    "collects": { "type": "integer", "description": "公开收藏数" },
+    "comments": { "type": "integer", "description": "公开评论数" },
+
+    "publish_date": { "type": "string", "format": "date", "description": "笔记发布日期，新鲜度核心依据" },
+
+    "is_suspected_ad": { "type": "boolean", "description": "是否疑似软广（人工/规则判定），true 则不计入有效印证" },
+    "key_quote": { "type": "string", "description": "支撑该 POI 标签的关键原文摘录（≤50字），供生成忠实度比对" },
+    "mood": {"type": "array", "items": {"type": "string"}},
+    "vibe": {"type": "array", "items": {"type": "string"}},
+    "activity": {"type": "array", "items": {"type": "string"}},
+    "claims": {
+      "type": "array",
+      "description": "一篇笔记对该实体的原子体验判断；旧缓存可为空，由迁移层从 key_quote 兼容生成。",
+      "items": {"type": "object"}
+    },
+
+    "budget_signals": {
+      "type": "array",
+      "description": "硬槽位·预算原始信号，每个金额一条，抽取时不换算先记口径（详见 硬性槽位结构化方案 §2.1）",
+      "items": {
+        "type": "object",
+        "properties": {
+          "raw_quote": { "type": "string", "description": "金额出处原文，如 \"两个人两天一共1200含住宿\"" },
+          "amount": { "type": "integer", "description": "金额数值（元）" },
+          "basis": { "type": "string", "enum": ["per_person_trip", "per_person_day", "per_group_trip", "per_person_meal", "per_room_night", "single_item", "free", "unknown"], "description": "金额口径/基数，决定如何归一化" },
+          "group_size": { "type": "integer", "description": "该金额涉及人数，多人总额换算人均时用，缺省按2" }
+        }
+      }
+    },
+    "budget_normalized_per_person_trip": { "type": ["integer", "null"], "description": "硬槽位·归一化后人均全程预算（元），无信号则 null 不脑补" },
+    "budget_extract_method": { "type": "string", "enum": ["direct", "sum", "none"], "description": "direct=命中人均全程口径 | sum=分项住食行票累加估算 | none=无金额" },
+    "budget_confidence": { "type": "string", "enum": ["高", "中", "低"], "description": "高=命中全程口径 | 中=需换算 | 低=分项估算或基数不明" },
+
+    "duration_raw_quote": { "type": "string", "description": "硬槽位·天数出处原文，如 \"三天两夜\"" },
+    "duration_days_observed": { "type": ["integer", "null"], "description": "硬槽位·作者实际待的天数（整数），未提及则 null" },
+    "duration_confidence": { "type": "string", "enum": ["高", "中", "低"], "description": "天数抽取置信度" },
+
+    "collected_date": { "type": "string", "format": "date", "description": "采集日期" }
+  }
+}

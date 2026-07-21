@@ -1,0 +1,11 @@
+{
+  "说明": "仅用于合成演示中的轮渡降级提示，不包含真实班次或路线数据。",
+  "reviewed_at": "2026-07-01",
+  "destination_ids": {
+    "DEMO_QINGLAN_ISLAND": {
+      "name": "示例·青岚岛",
+      "reason": "合成海岛场景需要轮渡"
+    }
+  },
+  "destination_names": {}
+}

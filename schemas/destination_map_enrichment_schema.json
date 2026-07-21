@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InspiTrip 目的地高德地图补全快照",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "destination_id", "name", "input_city", "input_province", "inventory_review",
+    "binding_policy", "geocode_status", "map_review_status", "coordinates",
+    "map_poi_id", "standard_admin", "address", "basic_operations", "poi_type",
+    "poi_typecode", "match_confidence", "match_level", "match_reasons",
+    "review_candidate", "failure_reason", "source", "checked_at", "cache_hit",
+    "input_fingerprint"
+  ],
+  "properties": {
+    "destination_id": {"type": "string"},
+    "name": {"type": "string"},
+    "input_city": {"type": "string"},
+    "input_province": {"type": "string"},
+    "inventory_review": {"enum": ["approved", "review_required", "excluded"]},
+    "binding_policy": {"enum": ["auto", "region", "manual_only", "exclude"]},
+    "geocode_status": {"enum": ["pending", "matched", "region_geocoded", "review_required", "no_match", "api_failed", "manual_override", "excluded"]},
+    "map_review_status": {"enum": ["review_required", "auto_approved", "manual_approved", "manual_approved_region", "excluded"]},
+    "coordinates": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["longitude", "latitude"],
+          "properties": {
+            "longitude": {"type": "number", "minimum": -180, "maximum": 180},
+            "latitude": {"type": "number", "minimum": -90, "maximum": 90}
+          }
+        }
+      ]
+    },
+    "map_poi_id": {"type": ["string", "null"]},
+    "standard_admin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["province", "city", "district", "adcode"],
+      "properties": {
+        "province": {"type": "string"},
+        "city": {"type": "string"},
+        "district": {"type": "string"},
+        "adcode": {"type": "string"}
+      }
+    },
+    "address": {"type": "string"},
+    "basic_operations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["telephone", "business_area", "opening_hours", "operational_status"],
+      "properties": {
+        "telephone": {"type": "string"},
+        "business_area": {"type": "string"},
+        "opening_hours": {"type": "string"},
+        "operational_status": {"type": "string"}
+      }
+    },
+    "poi_type": {"type": "string"},
+    "poi_typecode": {"type": "string"},
+    "match_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "match_level": {"enum": ["high", "medium", "low", "unknown"]},
+    "match_reasons": {"type": "array", "items": {"type": "string"}},
+    "review_candidate": {"type": ["object", "null"]},
+    "failure_reason": {"type": ["string", "null"]},
+    "source": {"type": "string"},
+    "checked_at": {"type": ["string", "null"]},
+    "cache_hit": {"type": "boolean"},
+    "input_fingerprint": {"type": "string"}
+  }
+}

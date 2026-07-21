@@ -1,0 +1,29 @@
+{
+  "version": "2.1.0",
+  "minimum_soft_tag_confidence": 0.55,
+  "minimum_activity_score": 0.45,
+  "preference": {
+    "semantic": 0.45,
+    "mood": 0.25,
+    "vibe": 0.18,
+    "activity": 0.12
+  },
+  "final": {
+    "preference": 0.80,
+    "evidence_quality": 0.10,
+    "freshness": 0.05,
+    "private_discovery": 0.05
+  },
+  "fact_adjustment": {
+    "version": "p3-v1",
+    "maximum_penalty": 0.20,
+    "penalties": {
+      "duration_unknown": 0.03,
+      "budget_unknown": 0.05,
+      "transport_mode_unknown": 0.07,
+      "travel_time_unknown": 0.08,
+      "travel_partial_failure": 0.025
+    }
+  },
+  "mmr_lambda": 0.75
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InspiTrip 目的地地图人工覆盖",
+  "type": "object",
+  "required": ["destinations"],
+  "properties": {
+    "_meta": {"type": "object"},
+    "destinations": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["inventory_review", "binding_policy"],
+        "properties": {
+          "inventory_review": {"enum": ["approved", "review_required", "excluded"]},
+          "binding_policy": {"enum": ["auto", "region", "manual_only", "exclude"]},
+          "query_terms": {"type": "array", "items": {"type": "string"}},
+          "expected_city": {"type": "string"},
+          "expected_province": {"type": "string"},
+          "review_note": {"type": "string"},
+          "manual_match": {
+            "type": "object",
+            "required": ["longitude", "latitude", "source", "checked_at"],
+            "properties": {
+              "map_poi_id": {"type": ["string", "null"]},
+              "name": {"type": "string"},
+              "longitude": {"type": "number"},
+              "latitude": {"type": "number"},
+              "standard_province": {"type": "string"},
+              "standard_city": {"type": "string"},
+              "standard_district": {"type": "string"},
+              "adcode": {"type": "string"},
+              "address": {"type": "string"},
+              "poi_type": {"type": "string"},
+              "poi_typecode": {"type": "string"},
+              "telephone": {"type": "string"},
+              "business_area": {"type": "string"},
+              "opening_hours": {"type": "string"},
+              "operational_status": {"type": "string"},
+              "source": {"type": "string"},
+              "checked_at": {"type": "string"}
+            }
+          }
+        }
+      }
+    }
+  }
+}

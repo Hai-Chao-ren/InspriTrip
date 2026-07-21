@@ -1,0 +1,1585 @@
+app:
+  description: 通过感觉推荐附近旅游目的地
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  icon_type: emoji
+  mode: advanced-chat
+  name: InspriTrip
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/xinference:0.0.15@1de758e19d1e6751215f0209057564c5cfd4e23ea8259d75fe33060543908b26
+    version: null
+kind: app
+version: 0.6.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        attachment_image_file_size_limit: 2
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        file_upload_limit: 20
+        image_file_batch_limit: 10
+        image_file_size_limit: 10
+        single_chunk_attachment_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: http-request
+      id: 1784039033733-source-1784036905425-target
+      selected: false
+      source: '1784039033733'
+      sourceHandle: source
+      target: '1784036905425'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: http-request
+        targetType: code
+      id: 1784036905425-source-1784039807503-target
+      selected: false
+      source: '1784036905425'
+      sourceHandle: source
+      target: '1784039807503'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: if-else
+      id: 1784039807503-source-1784104660954-target
+      selected: false
+      source: '1784039807503'
+      sourceHandle: source
+      target: '1784104660954'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: answer
+      id: 1784104660954-true-1784106286448-target
+      selected: false
+      source: '1784104660954'
+      sourceHandle: 'true'
+      target: '1784106286448'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: llm
+      id: 1784028457012-source-1784028607937-target
+      selected: false
+      source: '1784028457012'
+      sourceHandle: source
+      target: '1784028607937'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: 1784028607937-source-v2_query_plan_request-target
+      selected: false
+      source: '1784028607937'
+      sourceHandle: source
+      target: v2_query_plan_request
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: http-request
+      id: v2_query_plan_request-source-v2_query_plan_http-target
+      selected: false
+      source: v2_query_plan_request
+      sourceHandle: source
+      target: v2_query_plan_http
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: http-request
+        targetType: code
+      id: v2_query_plan_http-source-v2_query_plan_result-target
+      selected: false
+      source: v2_query_plan_http
+      sourceHandle: source
+      target: v2_query_plan_result
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: if-else
+      id: v2_query_plan_result-source-1784028996036-target
+      selected: false
+      source: v2_query_plan_result
+      sourceHandle: source
+      target: '1784028996036'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: answer
+      id: 1784028996036-true-v2_clarification_answer-target
+      selected: false
+      source: '1784028996036'
+      sourceHandle: 'true'
+      target: v2_clarification_answer
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: if-else
+      id: 1784028996036-false-1784108961199-target
+      selected: false
+      source: '1784028996036'
+      sourceHandle: 'false'
+      target: '1784108961199'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: answer
+      id: 1784108961199-true-1784109229874-target
+      selected: false
+      source: '1784108961199'
+      sourceHandle: 'true'
+      target: '1784109229874'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: answer
+      id: 1784108961199-896f2af8-db95-4e5e-a353-d16ea4fb825e-1784109310162-target
+      selected: false
+      source: '1784108961199'
+      sourceHandle: 896f2af8-db95-4e5e-a353-d16ea4fb825e
+      target: '1784109310162'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: answer
+      id: 1784108961199-unsupported-v2_unsupported_answer-target
+      selected: false
+      source: '1784108961199'
+      sourceHandle: unsupported
+      target: v2_unsupported_answer
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: code
+      id: 1784108961199-false-v2_retrieval_query-target
+      selected: false
+      source: '1784108961199'
+      sourceHandle: 'false'
+      target: v2_retrieval_query
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: knowledge-retrieval
+      id: v2_retrieval_query-source-1784030920049-target
+      selected: false
+      source: v2_retrieval_query
+      sourceHandle: source
+      target: '1784030920049'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: knowledge-retrieval
+        targetType: code
+      id: 1784030920049-source-1784039033733-target
+      selected: false
+      source: '1784030920049'
+      sourceHandle: source
+      target: '1784039033733'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: llm
+      id: 1784104660954-false-llm-target
+      selected: false
+      source: '1784104660954'
+      sourceHandle: 'false'
+      target: llm
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: llm-source-v2_output_validate_request-target
+      selected: false
+      source: llm
+      sourceHandle: source
+      target: v2_output_validate_request
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: http-request
+      id: v2_output_validate_request-source-v2_output_validate_http-target
+      selected: false
+      source: v2_output_validate_request
+      sourceHandle: source
+      target: v2_output_validate_http
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: http-request
+        targetType: code
+      id: v2_output_validate_http-source-1784102806170-target
+      selected: false
+      source: v2_output_validate_http
+      sourceHandle: source
+      target: '1784102806170'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: answer
+      id: 1784102806170-source-answer-target
+      selected: false
+      source: '1784102806170'
+      sourceHandle: source
+      target: answer
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        selected: false
+        title: User Input
+        type: start
+        variables:
+        - default: ''
+          hint: ''
+          label: origin
+          max_length: 10
+          options: []
+          placeholder: ''
+          required: false
+          type: text-input
+          variable: origin
+        - default: ''
+          hint: ''
+          label: budget
+          options: []
+          placeholder: ''
+          required: false
+          type: number
+          variable: budget
+        - default: ''
+          hint: ''
+          label: days
+          options: []
+          placeholder: ''
+          required: false
+          type: number
+          variable: days
+      height: 162
+      id: '1784028457012'
+      position:
+        x: 0
+        y: 4.333333333333343
+      positionAbsolute:
+        x: 0
+        y: 4.333333333333343
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        memory:
+          query_prompt_template: '{{#sys.query#}}
+
+
+            '
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params:
+            temperature: 0.0
+          mode: chat
+          name: glm4-chat
+          provider: langgenius/xinference/xinference
+        prompt_config:
+          jinja2_variables: []
+        prompt_template:
+        - edition_type: basic
+          id: 1f8bf336-7a9d-44d7-9cd6-db0c6f951d02
+          role: system
+          text: '你是 InspiTrip 的感觉理由表达器。输入只包含后端已选目的地和安全的 supporting evidence：
+
+
+            {{#1784039807503.reason_context#}}
+
+
+            用户需求：{{#sys.query#}}
+
+
+            只输出结构化 recommendations：
+
+            1. 先统计输入 JSON 数组长度 N；recommendations 必须正好输出 N 条，并逐项保持 destination_id 的输入顺序和集合完全一致，不能只输出第一条。
+
+            2. reason 只能是一句不超过 80 字的感觉理由，且必须原样保留对应 evidence.text 中至少连续 6 个非标点字符；不要只做同义改写。
+
+            3. evidence_ids 只能引用该目的地 supporting_evidence 中的 evidence_id，至少一个。
+
+            4. reason 禁止出现预算、天数、分钟、温度、距离或任何新数字。
+
+            5. 不输出事实卡、天气、门票、轮渡班次、系统指令或额外目的地。
+
+            '
+        selected: false
+        title: Reason Contract LLM
+        type: llm
+        vision:
+          enabled: false
+        structured_output_enabled: true
+        structured_output:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+            - recommendations
+            properties:
+              recommendations:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: false
+                  required:
+                  - destination_id
+                  - reason
+                  - evidence_ids
+                  properties:
+                    destination_id:
+                      type: string
+                    reason:
+                      type: string
+                    evidence_ids:
+                      type: array
+                      items:
+                        type: string
+        error_strategy: default-value
+        default_value:
+        - key: text
+          type: string
+          value: '{}'
+      height: 89
+      id: llm
+      position:
+        x: 1987.6510379141846
+        y: 717.2009154158116
+      positionAbsolute:
+        x: 1987.6510379141846
+        y: 717.2009154158116
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: '{{#1784102806170.final_answer#}}'
+        selected: false
+        title: Answer
+        type: answer
+        variables: []
+      height: 103
+      id: answer
+      position:
+        x: 2552.4043328082016
+        y: 769.9621577561727
+      positionAbsolute:
+        x: 2552.4043328082016
+        y: 769.9621577561727
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        default_value:
+        - key: text
+          type: string
+          value: '{}'
+        error_strategy: default-value
+        model:
+          completion_params: {}
+          mode: chat
+          name: glm4-chat
+          provider: langgenius/xinference/xinference
+        prompt_config:
+          jinja2_variables: []
+        prompt_template:
+        - edition_type: basic
+          id: 00d3de48-e681-4552-87ad-ac68ca1e80f1
+          role: system
+          text: '你是 InspiTrip 的 Query Planner。产品只服务江浙沪周末目的地发现。你必须只输出一个符合 Query Plan JSON Schema 的 JSON 对象，不要输出 Markdown、解释或额外字段。
+
+
+            一、先判断 scope 与 task_type
+
+
+            1. 明确要去江浙沪之外旅行：scope=out_of_region，task_type=unsupported。
+
+            2. 非旅行、闲聊、问系统本身或无意义输入：scope=not_travel，task_type=chitchat。
+
+            3. 纯订酒店、找餐厅或找咖啡馆，且没有目的地发现/观光需求：scope=not_supported_yet，task_type=unsupported。
+
+            4. 询问一个已知江浙沪目的地内部怎么玩：scope=in_domain，task_type=experience_lookup，并把用户明确说出的目的地原名写入 target_destination。
+
+            5. 从感觉和约束出发寻找“周末去哪”：scope=in_domain，task_type=destination_discovery，target_destination=null。
+
+
+            scope 非 in_domain 时：target_destination=null；hard_constraints 全部为 null/空数组；exclusions、三类 soft_preferences、semantic_query、evidence_aspects
+            全部清空。不得让 out_of_region、not_travel、not_supported_yet 进入检索。
+
+
+            二、硬约束
+
+
+            1. 只抽用户本轮明确表达的 origin、days_max、budget_max、travel_time_max、transport_modes、must_have_activities；缺失填 null 或 []，禁止脑补。
+
+            2. 中文数字要归一：周末/两天一夜=2 天；三天两夜=3 天；三小时内=180 分钟；两到三小时=180 分钟；预算一千五=1500 元。
+
+            3. 范围字段使用用户给出的上界，例如“1000 到 1500 元”写 budget_max=1500，“两到三天”写 days_max=3。
+
+            4. transport_modes 只允许：高铁、自驾、大巴、轮渡、地铁、公共交通。
+
+            5. 明确目的活动（“必须看海”“想逛古镇”“只想泡温泉”）进入 must_have_activities，且只能使用 act_* taxonomy leaf_id。
+
+            6. 弱活动（“顺便喝咖啡”“可以骑行”“有的话泡温泉”）只进入 soft_preferences.activity。
+
+            7. 必须逐分句、逐短语判断强弱，不能用一句话里的“顺便/可以”影响其他活动。
+
+            8. 否定活动（“不要爬山”“不想徒步”）绝不能进入 must_have_activities 或 soft activity；应把相应 act_* 放入 exclusions。
+
+            9. 双重否定保持保守，例如“不是不能徒步”不视为排除，也不升级为硬活动，可作为低置信软活动。
+
+
+            三、exclusions 与“不商业化”
+
+
+            1. exclusions 是规范字符串数组。活动否定使用 act_*；其他常用值使用“网红”“拥挤”“商业化”以及被否定的交通方式。
+
+            2. “不商业化/原生态/没开发”同时表达 vibe_unspoiled 和 exclusion“商业化”。
+
+            3. “不要网红/没那么网红/小众”产生 exclusion“网红”；“避开人潮/人少/不拥挤”产生 exclusion“拥挤”。
+
+            4. 否定词的作用域只覆盖紧邻的短语，不要把后续正向活动一起否定。
+
+
+            四、感觉标签
+
+
+            只能使用以下 taxonomy leaf_id，每个维度最多 2 项，confidence 低于 0.55 不输出。未表达的维度必须为 []。
+
+
+            mood：mood_unwind 独处放空；mood_heal 松弛治愈；mood_romantic 浪漫；mood_excited 冒险；mood_nostalgic 怀旧；mood_social 欢聚；mood_inspired
+            文艺充电；mood_freedom 自在随性。
+
+
+            vibe：vibe_niche 小众冷门；vibe_unspoiled 不商业化；vibe_artsy 文艺；vibe_nature 自然；vibe_local 市井烟火；vibe_cozy 精致惬意；vibe_ancient
+            古朴；vibe_urban 都市。
+
+
+            activity：act_sea 看海赶海；act_hike 徒步山野；act_camp 露营星空；act_town 古镇老街；act_cafe 咖啡书店；act_art 看展逛馆；act_ride 骑行；act_stay
+            住宿；act_hotspring 温泉；act_food 寻味。
+
+
+            五、semantic_query 与 evidence_aspects
+
+
+            1. semantic_query 只对用户明确表达的正向内容做忠实归一；不得新增地点、活动、预算、天数、交通方式或主题。
+
+            2. 用户信息少就保持短。否定条件放 exclusions，不靠 semantic_query 承载。
+
+            3. evidence_aspects 只按明确需求选择：安静/人少/网红→crowd；不商业化→commercialization；预算→cost；出发地/时间/方式→transport；看海/山景→scenery；活动→activity；独处→solo/mood_fit；季节/天气→weather_season。
+
+            4. 本阶段不生成天气安全风险、门票或完整轮渡班次结论。
+
+
+            六、规则纠错示例
+
+
+            “不想徒步，只想看海”→ must_have_activities=["act_sea"]，exclusions 含 "act_hike"。
+
+            “必须看海，顺便喝咖啡”→ must_have_activities=["act_sea"]，soft_preferences.activity 仅含 act_cafe。
+
+            “想找不商业化、没那么网红的地方”→ vibe 含 vibe_unspoiled，exclusions 含“商业化”“网红”。
+
+            “普陀山怎么玩”→ experience_lookup，target_destination="普陀山"。
+
+
+            用户当前输入：{{#sys.query#}}'
+        retry_config:
+          max_retries: 2
+          retry_enabled: true
+          retry_interval: 1000
+        selected: false
+        structured_output:
+          schema:
+            $schema: http://json-schema.org/draft-07/schema#
+            title: InspiTrip Query Plan Schema
+            type: object
+            additionalProperties: false
+            required:
+            - scope
+            - task_type
+            - target_destination
+            - hard_constraints
+            - exclusions
+            - semantic_query
+            - soft_preferences
+            - evidence_aspects
+            properties:
+              scope:
+                type: string
+                enum:
+                - in_domain
+                - out_of_region
+                - not_travel
+                - not_supported_yet
+              task_type:
+                type: string
+                enum:
+                - destination_discovery
+                - experience_lookup
+                - chitchat
+                - unsupported
+              target_destination:
+                type:
+                - string
+                - 'null'
+                description: experience_lookup 的已知目的地名称；未明确目的地时必须为 null。
+              hard_constraints:
+                type: object
+                additionalProperties: false
+                required:
+                - origin
+                - days_max
+                - budget_max
+                - travel_time_max
+                - transport_modes
+                - must_have_activities
+                properties:
+                  origin:
+                    type:
+                    - string
+                    - 'null'
+                  days_max:
+                    type:
+                    - integer
+                    - 'null'
+                    minimum: 1
+                  budget_max:
+                    type:
+                    - integer
+                    - 'null'
+                    minimum: 0
+                  travel_time_max:
+                    type:
+                    - integer
+                    - 'null'
+                    minimum: 0
+                  transport_modes:
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                      - 高铁
+                      - 自驾
+                      - 大巴
+                      - 轮渡
+                      - 地铁
+                      - 公共交通
+                  must_have_activities:
+                    type: array
+                    uniqueItems: true
+                    items:
+                      $ref: '#/definitions/activityId'
+              exclusions:
+                type: array
+                uniqueItems: true
+                items:
+                  type: string
+                  minLength: 1
+              semantic_query:
+                type: string
+              soft_preferences:
+                type: object
+                additionalProperties: false
+                required:
+                - mood
+                - vibe
+                - activity
+                properties:
+                  mood:
+                    $ref: '#/definitions/weightedMoodTags'
+                  vibe:
+                    $ref: '#/definitions/weightedVibeTags'
+                  activity:
+                    $ref: '#/definitions/weightedActivityTags'
+              evidence_aspects:
+                type: array
+                uniqueItems: true
+                items:
+                  type: string
+                  enum:
+                  - mood_fit
+                  - crowd
+                  - commercialization
+                  - scenery
+                  - activity
+                  - transport
+                  - cost
+                  - stay
+                  - food
+                  - solo
+                  - photo
+                  - safety
+                  - weather_season
+                  - other
+            definitions:
+              activityId:
+                type: string
+                enum:
+                - act_sea
+                - act_hike
+                - act_camp
+                - act_town
+                - act_cafe
+                - act_art
+                - act_ride
+                - act_stay
+                - act_hotspring
+                - act_food
+              weightedTagBase:
+                type: object
+                additionalProperties: false
+                required:
+                - id
+                - confidence
+                properties:
+                  id:
+                    type: string
+                  confidence:
+                    type: number
+                    minimum: 0
+                    maximum: 1
+              weightedMoodTags:
+                type: array
+                maxItems: 2
+                uniqueItems: true
+                items:
+                  allOf:
+                  - $ref: '#/definitions/weightedTagBase'
+                  - properties:
+                      id:
+                        enum:
+                        - mood_unwind
+                        - mood_heal
+                        - mood_romantic
+                        - mood_excited
+                        - mood_nostalgic
+                        - mood_social
+                        - mood_inspired
+                        - mood_freedom
+              weightedVibeTags:
+                type: array
+                maxItems: 2
+                uniqueItems: true
+                items:
+                  allOf:
+                  - $ref: '#/definitions/weightedTagBase'
+                  - properties:
+                      id:
+                        enum:
+                        - vibe_niche
+                        - vibe_unspoiled
+                        - vibe_artsy
+                        - vibe_nature
+                        - vibe_local
+                        - vibe_cozy
+                        - vibe_ancient
+                        - vibe_urban
+              weightedActivityTags:
+                type: array
+                maxItems: 2
+                uniqueItems: true
+                items:
+                  allOf:
+                  - $ref: '#/definitions/weightedTagBase'
+                  - properties:
+                      id:
+                        $ref: '#/definitions/activityId'
+        structured_output_enabled: true
+        title: Query Plan LLM
+        type: llm
+        vision:
+          enabled: false
+      height: 155
+      id: '1784028607937'
+      position:
+        x: 349.07106770231303
+        y: -35.94112501241763
+      positionAbsolute:
+        x: 349.07106770231303
+        y: -35.94112501241763
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: contains
+            id: v2-should-clarify
+            value: 'true'
+            varType: string
+            variable_selector:
+            - v2_query_plan_result
+            - should_clarify
+          id: 'true'
+          logical_operator: and
+        selected: false
+        title: Clarification Router
+        type: if-else
+      height: 177
+      id: '1784028996036'
+      position:
+        x: 979.8486772909546
+        y: 239.4822108787044
+      positionAbsolute:
+        x: 979.8486772909546
+        y: 239.4822108787044
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        dataset_ids:
+        - REPLACE_WITH_DATASET_ID
+        metadata_filtering_mode: disabled
+        multiple_retrieval_config:
+          reranking_enable: true
+          reranking_mode: reranking_model
+          reranking_model:
+            model: bge-reranker
+            provider: langgenius/xinference/xinference
+          score_threshold: 0.0
+          top_k: 60
+          weights:
+            keyword_setting:
+              keyword_weight: 0.3
+            vector_setting:
+              embedding_model_name: bge-m3
+              embedding_provider_name: langgenius/xinference/xinference
+              vector_weight: 0.7
+            weight_type: customized
+        query_attachment_selector: []
+        query_variable_selector:
+        - v2_retrieval_query
+        - query
+        retrieval_mode: multiple
+        selected: true
+        title: Destination Retrieval
+        type: knowledge-retrieval
+      height: 91
+      id: '1784030920049'
+      position:
+        x: 1318.1624711913937
+        y: 239.4822108787044
+      positionAbsolute:
+        x: 1318.1624711913937
+        y: 239.4822108787044
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          type: json
+          data:
+          - id: v2-rank-request-body
+            key: ''
+            type: text
+            value: '{{#1784039033733.body#}}'
+        headers: ''
+        method: post
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 10
+          max_read_timeout: 90
+          max_write_timeout: 30
+        title: Rank Candidates HTTP
+        type: http-request
+        url: http://YOUR_BACKEND_HOST:8000/api/v2/rank_candidates
+        variables: []
+      height: 139
+      id: '1784036905425'
+      position:
+        x: 1332.4478625034656
+        y: 512.2180076196597
+      positionAbsolute:
+        x: 1332.4478625034656
+        y: 512.2180076196597
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: "import json\n\n\ndef main(items: list, query_plan: dict, raw_query: str) -> dict:\n    query_plan = query_plan\
+          \ if isinstance(query_plan, dict) else {}\n    body = json.dumps({\n        \"raw_query\": (raw_query or \"\").strip(),\n\
+          \        \"query_plan\": query_plan,\n        \"retrieval_items\": items or [],\n        \"allow_unknown_hard_facts\"\
+          : True,\n        \"top_n\": 10,\n        \"final_limit\": 5,\n        \"include_live_context\": True,\n        \"\
+          live_context_limit\": 3,\n        \"live_context_deadline_seconds\": 3.0,\n    }, ensure_ascii=False)\n    return\
+          \ {\"body\": body}\n"
+        code_language: python3
+        outputs:
+          body:
+            children: null
+            type: string
+        selected: false
+        title: Build V2 Rank Request
+        type: code
+        variables:
+        - value_selector:
+          - '1784030920049'
+          - result
+          value_type: array[object]
+          variable: items
+        - value_selector:
+          - v2_query_plan_result
+          - query_plan
+          value_type: object
+          variable: query_plan
+        - value_selector:
+          - sys
+          - query
+          value_type: string
+          variable: raw_query
+      height: 53
+      id: '1784039033733'
+      position:
+        x: 1323.35730049536
+        y: 416.0514868682018
+      positionAbsolute:
+        x: 1323.35730049536
+        y: 416.0514868682018
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: "import json\n\n\ndef main(body=\"\") -> dict:\n    try:\n        data = json.loads(body or \"{}\")\n    except\
+          \ Exception:\n        data = {}\n    selected = data.get(\"selected\") or []\n    diagnostic = data.get(\"empty_diagnostic\"\
+          ) or {}\n    return {\n        \"reason_context\": json.dumps(data.get(\"reason_context\") or [], ensure_ascii=False),\n\
+          \        \"empty\": \"true\" if not selected else \"false\",\n        \"empty_message\": str(diagnostic.get(\"message\"\
+          ) or \"当前没有可安全输出的推荐结果。\"),\n    }\n"
+        code_language: python3
+        outputs:
+          reason_context:
+            children: null
+            type: string
+          empty:
+            children: null
+            type: string
+          empty_message:
+            children: null
+            type: string
+        selected: false
+        title: Prepare Verified Reason Context
+        type: code
+        variables:
+        - value_selector:
+          - '1784036905425'
+          - body
+          value_type: string
+          variable: body
+      height: 53
+      id: '1784039807503'
+      position:
+        x: 1359.6768396657612
+        y: 686.1662730965618
+      positionAbsolute:
+        x: 1359.6768396657612
+        y: 686.1662730965618
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: "import json\n\n\ndef _text(value):\n    return \" \".join(str(value or \"\").split())\n\n\ndef main(body=\"\
+          \") -> dict:\n    try:\n        data = json.loads(body or \"{}\")\n    except Exception:\n        data = {}\n  \
+          \  validation = data.get(\"validation\") or {}\n    reasons = {\n        str(row.get(\"destination_id\") or \"\"\
+          ): row\n        for row in validation.get(\"recommendations\") or []\n    }\n    lines = []\n    for index, card\
+          \ in enumerate(data.get(\"fact_cards\") or [], 1):\n        destination_id = str(card.get(\"destination_id\") or\
+          \ \"\")\n        reason = reasons.get(destination_id) or {}\n        block = [f\"{index}. {_text(card.get('name'))}（{_text(card.get('city'))}）\"\
+          ]\n        if reason.get(\"reason\"):\n            block.append(\"- 感觉理由：\" + _text(reason.get(\"reason\")))\n \
+          \       duration = card.get(\"duration\") or {}\n        if duration.get(\"min_days\") is not None or duration.get(\"\
+          max_days\") is not None:\n            block.append(\n                f\"- 建议天数：{duration.get('min_days') if duration.get('min_days')\
+          \ is not None else '?'}–\"\n                f\"{duration.get('max_days') if duration.get('max_days') is not None\
+          \ else '?'} 天\"\n                f\"（来源：{_text(duration.get('source')) or '待核实'}）\"\n            )\n        budget\
+          \ = card.get(\"budget\") or {}\n        if budget.get(\"typical\") is not None:\n            block.append(f\"- 预算代表值：人均约\
+          \ {budget.get('typical')} 元（置信度：{_text(budget.get('confidence')) or '未知'}）\")\n        assumptions = card.get(\"\
+          assumptions\") or []\n        if assumptions:\n            block.append(\"- 透明降级：\" + \"、\".join(_text(value) for\
+          \ value in assumptions))\n        for travel in (card.get(\"travel_options\") or [])[:3]:\n            minutes =\
+          \ travel.get(\"travel_minutes\")\n            value = f\"约 {minutes} 分钟\" if minutes is not None else \"耗时未知\"\n\
+          \            note = (\"；\" + _text(travel.get(\"note\"))) if travel.get(\"note\") else \"\"\n            block.append(\n\
+          \                f\"- 交通事实：{_text(travel.get('origin_city'))} → {_text(travel.get('transport_mode'))}，\"\n     \
+          \           f\"{value}，置信度{_text(travel.get('confidence')) or '低'}{note}\"\n            )\n        for caveat in\
+          \ (card.get(\"caveats\") or [])[:1]:\n            block.append(\"- UGC 限制：\" + _text(caveat.get(\"claim\") or caveat.get(\"\
+          key_quote\")))\n        weather = card.get(\"weather\") or {}\n        if weather.get(\"available\"):\n        \
+          \    current = weather.get(\"current\") or {}\n            block.append(\n                f\"- 实时天气（高德）：{_text(current.get('weather'))\
+          \ or '未知'}，\"\n                f\"{_text(current.get('temperature_c')) or '未知'}℃，\"\n                f\"湿度{_text(current.get('humidity_percent'))\
+          \ or '未知'}%\"\n                f\"（发布时间 {_text(weather.get('reporttime')) or '未知'}）\"\n            )\n        external\
+          \ = card.get(\"external_verification\") or {}\n        label = _text(external.get(\"label\")) or \"低置信近期核验\"\n \
+          \       season = (external.get(\"best_season_sources\") or [])[:1]\n        recent = (external.get(\"recent_crowd_and_trend_sources\"\
+          ) or [])[:1]\n        if season:\n            block.append(f\"- {label}（季节）：{_text(season[0].get('snippet'))}｜{_text(season[0].get('url'))}\"\
+          )\n        if recent:\n            block.append(f\"- {label}（拥挤/网红化）：{_text(recent[0].get('snippet'))}｜{_text(recent[0].get('url'))}\"\
+          )\n        lines.append(\"\\n\".join(block))\n    return {\n        \"final_answer\": \"\\n\\n\".join(lines) if\
+          \ lines else \"当前没有可安全输出的推荐结果。\",\n        \"passed\": \"true\" if validation.get(\"passed\") else \"false\",\n\
+          \        \"fallback_used\": \"true\" if validation.get(\"fallback_used\") else \"false\",\n    }\n"
+        code_language: python3
+        outputs:
+          final_answer:
+            children: null
+            type: string
+          passed:
+            children: null
+            type: string
+          fallback_used:
+            children: null
+            type: string
+        selected: false
+        title: Render Verified Recommendation
+        type: code
+        variables:
+        - value_selector:
+          - v2_output_validate_http
+          - body
+          value_type: string
+          variable: body
+      height: 53
+      id: '1784102806170'
+      position:
+        x: 2224.2113257700476
+        y: 818.2469480191128
+      positionAbsolute:
+        x: 2224.2113257700476
+        y: 818.2469480191128
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: contains
+            id: 80ad3fbf-b903-48c6-aced-62a46d3783b1
+            value: 'true'
+            varType: string
+            variable_selector:
+            - '1784039807503'
+            - empty
+          id: 'true'
+          logical_operator: and
+        selected: false
+        title: IF/ELSE 2
+        type: if-else
+      height: 149
+      id: '1784104660954'
+      position:
+        x: 1707.3433333147705
+        y: 634.1976578717611
+      positionAbsolute:
+        x: 1707.3433333147705
+        y: 634.1976578717611
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: '{{#1784039807503.empty_message#}}'
+        selected: false
+        title: Answer 2
+        type: answer
+        variables: []
+      height: 117
+      id: '1784106286448'
+      position:
+        x: 2170.4712112324687
+        y: 532.5622777113613
+      positionAbsolute:
+        x: 2170.4712112324687
+        y: 532.5622777113613
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: v2-scope-out
+            value: out_of_region
+            varType: string
+            variable_selector:
+            - v2_query_plan_result
+            - scope
+          id: 'true'
+          logical_operator: and
+        - case_id: 896f2af8-db95-4e5e-a353-d16ea4fb825e
+          conditions:
+          - comparison_operator: is
+            id: v2-scope-chat
+            value: not_travel
+            varType: string
+            variable_selector:
+            - v2_query_plan_result
+            - scope
+          id: 896f2af8-db95-4e5e-a353-d16ea4fb825e
+          logical_operator: and
+        - case_id: unsupported
+          conditions:
+          - comparison_operator: is
+            id: v2-scope-unsupported
+            value: not_supported_yet
+            varType: string
+            variable_selector:
+            - v2_query_plan_result
+            - scope
+          id: unsupported
+          logical_operator: and
+        selected: false
+        title: Scope Router
+        type: if-else
+      height: 221
+      id: '1784108961199'
+      position:
+        x: 646.8486776318016
+        y: 147.4822118289446
+      positionAbsolute:
+        x: 646.8486776318016
+        y: 147.4822118289446
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: '哈，你这是要去远方呀～不过我目前只熟江浙沪这一带（上海、江苏、浙江）。
+
+          要不换个这边的地方？比如想看海、逛古镇、找个安静咖啡馆，我都能帮你挖点私藏。'
+        selected: false
+        title: 域外旅游
+        type: answer
+        variables: []
+      height: 165
+      id: '1784109229874'
+      position:
+        x: 1045.8486766092606
+        y: -122.5177831513083
+      positionAbsolute:
+        x: 1045.8486766092606
+        y: -122.5177831513083
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: '我是"灵感足迹"，专门帮你在江浙沪找好玩的地方～
+
+          说说你的感觉吧，比如"想一个人静静看海""想找个热闹的地方逛吃"，我来给你靠谱推荐。'
+        selected: false
+        title: 闲聊
+        type: answer
+        variables: []
+      height: 149
+      id: '1784109310162'
+      position:
+        x: 1036.8486767022187
+        y: 71.48221484492433
+      positionAbsolute:
+        x: 1036.8486767022187
+        y: 71.48221484492433
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: "def main(raw_query: str, query_plan=None) -> dict:\n    raw_query = (raw_query or \"\").strip()\n    query_plan\
+          \ = query_plan if isinstance(query_plan, dict) else {}\n    labels = {\n        \"mood_unwind\": \"安静独处放空\",\n \
+          \       \"mood_heal\": \"松弛治愈放松\",\n        \"mood_romantic\": \"浪漫约会\",\n        \"mood_excited\": \"刺激冒险\",\n\
+          \        \"mood_nostalgic\": \"怀旧复古\",\n        \"mood_social\": \"热闹欢聚\",\n        \"mood_inspired\": \"文艺灵感\"\
+          ,\n        \"mood_freedom\": \"自由随性\",\n        \"vibe_niche\": \"小众冷门人少\",\n        \"vibe_unspoiled\": \"原生态不商业化\"\
+          ,\n        \"vibe_artsy\": \"文艺有调性\",\n        \"vibe_nature\": \"自然山野海边\",\n        \"vibe_local\": \"市井烟火气\",\n\
+          \        \"vibe_cozy\": \"精致惬意\",\n        \"vibe_ancient\": \"古朴古镇\",\n        \"vibe_urban\": \"都市潮流\",\n    \
+          \    \"act_sea\": \"看海赶海\",\n        \"act_hike\": \"徒步山野\",\n        \"act_camp\": \"露营星空\",\n        \"act_town\"\
+          : \"古镇老街\",\n        \"act_cafe\": \"咖啡书店\",\n        \"act_art\": \"看展博物馆\",\n        \"act_ride\": \"骑行漫游\",\n\
+          \        \"act_stay\": \"民宿住宿\",\n        \"act_hotspring\": \"温泉泡汤\",\n        \"act_food\": \"美食探店\",\n    }\n\
+          \    parts = [str(query_plan.get(\"target_destination\") or \"\").strip(), str(query_plan.get(\"semantic_query\"\
+          ) or raw_query).strip()]\n    soft = query_plan.get(\"soft_preferences\") or {}\n    tag_ids = [\n        str(item.get(\"\
+          id\") or \"\")\n        for dimension in (\"mood\", \"vibe\", \"activity\")\n        for item in (soft.get(dimension)\
+          \ or [])\n        if isinstance(item, dict)\n    ]\n    tag_ids.extend((query_plan.get(\"hard_constraints\") or\
+          \ {}).get(\"must_have_activities\") or [])\n    parts.extend(labels.get(tag_id, \"\") for tag_id in tag_ids)\n \
+          \   query = \" \".join(dict.fromkeys(part for part in parts if part))\n    return {\"query\": query or raw_query}\n"
+        code_language: python3
+        outputs:
+          query:
+            children: null
+            type: string
+        selected: false
+        title: Build Retrieval Query
+        type: code
+        variables:
+        - value_selector:
+          - sys
+          - query
+          value_type: string
+          variable: raw_query
+        - value_selector:
+          - v2_query_plan_result
+          - query_plan
+          value_type: object
+          variable: query_plan
+      height: 53
+      id: v2_retrieval_query
+      position:
+        x: 1120
+        y: 240
+      positionAbsolute:
+        x: 1120
+        y: 240
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: "import json\n\n\ndef main(planner=None, planner_text=\"\", raw_query=\"\", origin=None, budget=None, days=None,\
+          \ conversation_id=\"\") -> dict:\n    planner_value = planner if isinstance(planner, dict) and planner else (planner_text\
+          \ or \"{}\")\n    form_values = {\n        \"origin\": (origin or \"\").strip() or None,\n        \"budget\": budget,\n\
+          \        \"days\": days,\n    }\n    body = json.dumps({\n        \"raw_query\": (raw_query or \"\").strip(),\n\
+          \        \"planner_output\": planner_value,\n        \"form_values\": form_values,\n        \"conversation_id\"\
+          : (conversation_id or \"\").strip(),\n    }, ensure_ascii=False)\n    return {\"body\": body}\n"
+        code_language: python3
+        outputs:
+          body:
+            children: null
+            type: string
+        selected: false
+        title: Build Query Plan Resolve Request
+        type: code
+        variables:
+        - value_selector:
+          - '1784028607937'
+          - structured_output
+          value_type: object
+          variable: planner
+        - value_selector:
+          - '1784028607937'
+          - text
+          value_type: string
+          variable: planner_text
+        - value_selector:
+          - sys
+          - query
+          value_type: string
+          variable: raw_query
+        - value_selector:
+          - '1784028457012'
+          - origin
+          value_type: string
+          variable: origin
+        - value_selector:
+          - '1784028457012'
+          - budget
+          value_type: number
+          variable: budget
+        - value_selector:
+          - '1784028457012'
+          - days
+          value_type: number
+          variable: days
+        - value_selector:
+          - sys
+          - conversation_id
+          value_type: string
+          variable: conversation_id
+      height: 53
+      id: v2_query_plan_request
+      position:
+        x: 690
+        y: 360
+      positionAbsolute:
+        x: 690
+        y: 360
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          type: json
+          data:
+          - id: v2-query-plan-resolve-body
+            key: ''
+            type: text
+            value: '{{#v2_query_plan_request.body#}}'
+        headers: ''
+        method: post
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 10
+          max_read_timeout: 30
+          max_write_timeout: 30
+        title: Resolve Query Plan HTTP
+        type: http-request
+        url: http://YOUR_BACKEND_HOST:8000/api/v2/query_plan/resolve
+        variables: []
+      height: 139
+      id: v2_query_plan_http
+      position:
+        x: 940
+        y: 360
+      positionAbsolute:
+        x: 940
+        y: 360
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: "import json\n\n\ndef main(body=\"\") -> dict:\n    try:\n        data = json.loads(body or \"{}\")\n    except\
+          \ Exception:\n        data = {}\n    plan = data.get(\"query_plan\") if isinstance(data.get(\"query_plan\"), dict)\
+          \ else {}\n    clarification = data.get(\"clarification\") if isinstance(data.get(\"clarification\"), dict) else\
+          \ {}\n    return {\n        \"query_plan\": plan,\n        \"semantic_query\": str(plan.get(\"semantic_query\")\
+          \ or \"\"),\n        \"scope\": str(plan.get(\"scope\") or \"not_travel\"),\n        \"task_type\": str(plan.get(\"\
+          task_type\") or \"unsupported\"),\n        \"enter_retrieval\": \"true\" if data.get(\"enter_retrieval\") else \"\
+          false\",\n        \"should_clarify\": \"true\" if clarification.get(\"should_clarify\") else \"false\",\n      \
+          \  \"clarification_question\": str(clarification.get(\"question\") or \"\"),\n    }\n"
+        code_language: python3
+        outputs:
+          query_plan:
+            children: null
+            type: object
+          semantic_query:
+            children: null
+            type: string
+          scope:
+            children: null
+            type: string
+          task_type:
+            children: null
+            type: string
+          enter_retrieval:
+            children: null
+            type: string
+          should_clarify:
+            children: null
+            type: string
+          clarification_question:
+            children: null
+            type: string
+        selected: false
+        title: Parse Query Plan Resolve Result
+        type: code
+        variables:
+        - value_selector:
+          - v2_query_plan_http
+          - body
+          value_type: string
+          variable: body
+      height: 53
+      id: v2_query_plan_result
+      position:
+        x: 1190
+        y: 360
+      positionAbsolute:
+        x: 1190
+        y: 360
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: '{{#v2_query_plan_result.clarification_question#}}'
+        selected: false
+        title: Clarification Answer
+        type: answer
+        variables: []
+      height: 103
+      id: v2_clarification_answer
+      position:
+        x: 1480
+        y: 190
+      positionAbsolute:
+        x: 1480
+        y: 190
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: 这个需求目前不在目的地发现范围内。我现在可以帮你找江浙沪周末目的地或已知目的地里的观光玩法。
+        selected: false
+        title: Unsupported Answer
+        type: answer
+        variables: []
+      height: 103
+      id: v2_unsupported_answer
+      position:
+        x: 1730
+        y: 650
+      positionAbsolute:
+        x: 1730
+        y: 650
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: "import json\n\n\ndef main(rank_body=\"\", llm_output=None, llm_text=\"\") -> dict:\n    try:\n        ranked\
+          \ = json.loads(rank_body or \"{}\")\n    except Exception:\n        ranked = {}\n    expression = llm_output if\
+          \ isinstance(llm_output, dict) and llm_output else (llm_text or \"{}\")\n    body = json.dumps({\n        \"llm_output\"\
+          : expression,\n        \"selected\": ranked.get(\"selected\") or [],\n        \"live_context\": ranked.get(\"live_context\"\
+          ) or {},\n    }, ensure_ascii=False)\n    return {\"body\": body}\n"
+        code_language: python3
+        outputs:
+          body:
+            children: null
+            type: string
+        selected: false
+        title: Build Output Validation Request
+        type: code
+        variables:
+        - value_selector:
+          - '1784036905425'
+          - body
+          value_type: string
+          variable: rank_body
+        - value_selector:
+          - llm
+          - structured_output
+          value_type: object
+          variable: llm_output
+        - value_selector:
+          - llm
+          - text
+          value_type: string
+          variable: llm_text
+      height: 53
+      id: v2_output_validate_request
+      position:
+        x: 2470
+        y: 710
+      positionAbsolute:
+        x: 2470
+        y: 710
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          type: json
+          data:
+          - id: v2-output-validate-body
+            key: ''
+            type: text
+            value: '{{#v2_output_validate_request.body#}}'
+        headers: ''
+        method: post
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 10
+          max_read_timeout: 30
+          max_write_timeout: 30
+        title: Validate Output HTTP
+        type: http-request
+        url: http://YOUR_BACKEND_HOST:8000/api/v2/output/validate
+        variables: []
+      height: 139
+      id: v2_output_validate_http
+      position:
+        x: 2720
+        y: 710
+      positionAbsolute:
+        x: 2720
+        y: 710
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    viewport:
+      x: -459.7677906230995
+      y: 191.7958259172043
+      zoom: 0.9143594376798873
+  rag_pipeline_variables: []

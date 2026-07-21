@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="InspiTrip AI 产品作品集：从模糊旅行感觉到可验证推荐。">
+  <title>InspiTrip · AI 产品综合评审页</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#case-study">跳到项目说明</a>
+
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="InspiTrip 首页">
+      <span class="brand-mark" aria-hidden="true">路</span>
+      <span><strong>InspiTrip</strong><small>感觉驱动的可信旅行推荐</small></span>
+    </a>
+    <div class="header-actions">
+      <span class="public-badge"><i aria-hidden="true"></i> 合成数据交互演示</span>
+      <a class="text-link" href="https://github.com/Hai-Chao-ren/InspriTrip">查看 GitHub ↗</a>
+    </div>
+  </header>
+
+  <main id="top" class="review-shell">
+    <section class="app-panel" aria-labelledby="demo-heading">
+      <div class="demo-heading-row">
+        <div>
+          <p class="eyebrow">INTERACTIVE PRODUCT REVIEW</p>
+          <h1 id="demo-heading">一句感觉，如何变成可信目的地？</h1>
+        </div>
+        <button class="help-button" id="demo-help" type="button" aria-expanded="false">演示说明</button>
+      </div>
+
+      <div id="demo-help-panel" class="demo-help" hidden>
+        这里使用 6 个虚构目的地和合成证据，演示真实交互与排序逻辑。自由问答、地图和实时信息需要在本地完整模式中配置 Dify 与相关 API。
+      </div>
+
+      <div class="scenario-toolbar" aria-label="演示场景">
+        <div class="toolbar-label">场景</div>
+        <div class="segmented" id="scenario-switcher">
+          <button type="button" class="active" data-scenario="sea">安静看海</button>
+          <button type="button" data-scenario="town">古镇咖啡</button>
+          <button type="button" data-scenario="tight">极限条件</button>
+        </div>
+        <div class="toolbar-label state-label">状态</div>
+        <div class="segmented state-switcher" id="state-switcher">
+          <button type="button" class="active" data-state="normal">正常</button>
+          <button type="button" data-state="loading">生成中</button>
+          <button type="button" data-state="empty">空结果</button>
+          <button type="button" data-state="error">服务降级</button>
+        </div>
+      </div>
+
+      <div class="product-shell">
+        <header class="product-topbar">
+          <div>
+            <strong>灵感工作台</strong>
+            <span>公开 Demo</span>
+          </div>
+          <div class="mode-indicator"><i></i> Demo mode</div>
+        </header>
+
+        <div class="product-layout">
+          <nav class="product-nav" aria-label="产品页面">
+            <button type="button" class="active" data-view="discover"><span>✦</span>发现灵感</button>
+            <button type="button" data-view="clarify"><span>?</span>渐进澄清</button>
+            <button type="button" data-view="trace"><span>⌁</span>推荐过程</button>
+            <button type="button" data-view="results"><span>✓</span>可信结果</button>
+            <div class="nav-separator">验证闭环</div>
+            <button type="button" data-view="feedback"><span>↺</span>反馈与纠错</button>
+          </nav>
+
+          <div class="product-content">
+            <div class="view-header">
+              <div>
+                <p id="view-kicker">从一句人话开始</p>
+                <h2 id="view-title">今天想要什么感觉？</h2>
+              </div>
+              <span id="scenario-tag" class="scenario-tag">场景 A</span>
+            </div>
+            <div id="screen" class="screen" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="case-study" class="case-panel" aria-label="项目案例说明">
+      <article class="case-content">
+        <header class="case-hero">
+          <p class="eyebrow">AI PRODUCT PORTFOLIO · 2026</p>
+          <h2>不知道去哪，<br>也能从一句感觉开始。</h2>
+          <p class="hero-lead">InspiTrip 将模糊的出游冲动翻译成结构化偏好，再用事实约束、UGC 证据与确定性排序，给出可解释、可行动的目的地灵感。</p>
+          <p class="english-summary">InspiTrip turns vague travel feelings into evidence-backed destination recommendations through query planning, hybrid retrieval, deterministic constraints and transparent confidence boundaries.</p>
+          <div class="evidence-ledger" aria-label="项目验证摘要">
+            <div><span>工作流</span><strong>23 节点</strong><small>Dify orchestration</small></div>
+            <div><span>Query 评测</span><strong>200 / 200</strong><small>private snapshot</small></div>
+            <div><span>Recall@20/30/60</span><strong>88.33%</strong><small>180 cases</small></div>
+            <div><span>离线测试</span><strong>184</strong><small>before migration</small></div>
+          </div>
+          <p class="metric-note">指标来自未公开的本地评测快照；本页六个地点均为合成演示数据。</p>
+        </header>
+
+        <section id="problem" class="case-section">
+          <span class="section-label">产品问题</span>
+          <h3>传统 OTA 擅长回答“去哪里”，却很难处理“我只知道想要什么感觉”。</h3>
+          <div class="problem-contrast">
+            <div><small>结构化搜索</small><p>上海出发、两天、人均 1000 元</p></div>
+            <span aria-hidden="true">＋</span>
+            <div><small>非结构化意图</small><p>想安静看海，不要太商业化</p></div>
+          </div>
+          <p>核心产品假设不是让模型“猜你喜欢”，而是先把感觉、限制和不确定性拆开：硬约束必须可验证，软偏好用于排序，证据不足时明确降级。</p>
+        </section>
+
+        <section id="decisions" class="case-section">
+          <span class="section-label">关键决策</span>
+          <h3>用确定性换取可信，而不是把所有判断交给 Agent。</h3>
+          <div class="decision-list">
+            <button type="button" data-jump="clarify"><b>渐进澄清</b><span>默认直接给结果，只在缺少阻断槽位时追问一次。</span><i>查看交互 →</i></button>
+            <button type="button" data-jump="trace"><b>Workflow 而非 ReAct</b><span>Query Plan、检索、过滤、证据门控和输出校验均有明确边界。</span><i>查看流程 →</i></button>
+            <button type="button" data-jump="results"><b>理由与事实分离</b><span>LLM 只生成受限理由；预算、交通与限制由代码渲染。</span><i>查看结果 →</i></button>
+          </div>
+        </section>
+
+        <section id="architecture" class="case-section">
+          <span class="section-label">系统架构</span>
+          <h3>语义召回交给 Dify，可信推荐交给后端。</h3>
+          <div class="architecture-flow" role="img" aria-label="从用户 Query 到可信推荐的处理流程">
+            <div><small>01</small><b>Query Plan</b><span>意图、硬约束、软偏好</span></div>
+            <i>→</i>
+            <div><small>02</small><b>Hybrid Retrieval</b><span>BM25 + Dense + Reranker</span></div>
+            <i>→</i>
+            <div><small>03</small><b>Deterministic Rank</b><span>事实过滤 + 感觉排序 + MMR</span></div>
+            <i>→</i>
+            <div><small>04</small><b>Evidence Gate</b><span>UGC Claim 取证与限制</span></div>
+          </div>
+          <blockquote>Dify 只返回 destination_id 和语义分数；PostgreSQL / JSONL 提供事实、画像和证据，避免从检索文本反向猜测结构化数据。</blockquote>
+        </section>
+
+        <section id="data-model" class="case-section">
+          <span class="section-label">数据可信层</span>
+          <h3>不是把笔记切 Chunk，而是建立可追溯的数据关系。</h3>
+          <div class="data-chain">
+            <button type="button" data-jump="trace"><span>Entity</span><small>这是什么地点</small></button>
+            <button type="button" data-jump="trace"><span>Evidence</span><small>证据来自哪里</small></button>
+            <button type="button" data-jump="results"><span>Claim</span><small>来源具体说了什么</small></button>
+            <button type="button" data-jump="results"><span>Fact</span><small>预算与交通约束</small></button>
+            <button type="button" data-jump="results"><span>Profile</span><small>目的地适合什么感觉</small></button>
+          </div>
+        </section>
+
+        <section id="evaluation" class="case-section">
+          <span class="section-label">评测与性能</span>
+          <h3>分别验证解析、召回、排序和输出，而不是只看最终文案。</h3>
+          <div class="evaluation-table" role="table">
+            <div role="row"><span role="cell">Query Plan</span><b role="cell">200/200</b><small role="cell">规则 fallback 自动评测</small></div>
+            <div role="row"><span role="cell">Retrieval</span><b role="cell">Recall 88.33%</b><small role="cell">180 条真实工作流用例</small></div>
+            <div role="row"><span role="cell">Backend P95</span><b role="cell">0.667s</b><small role="cell">不含外部实时调用</small></div>
+            <div role="row"><span role="cell">Dify P95</span><b role="cell">20.785s</b><small role="cell">明确记录为待优化项</small></div>
+          </div>
+        </section>
+
+        <section id="experiment" class="case-section">
+          <span class="section-label">指标与实验</span>
+          <h3>北极星是“有效灵感转化率”，不是模型调用次数。</h3>
+          <p>实现了事件白名单、幂等采集、推荐反馈、稳定 50/50 分流和 demo/production 数据隔离。首个实验验证定位权限触发时机。</p>
+          <div class="experiment-card">
+            <div><small>A · auto prompt</small><span>页面加载后请求定位</span></div>
+            <div><small>B · intent prompt</small><span>用户表达出行意图后请求</span></div>
+          </div>
+          <p class="boundary-note">两条自动化演示会话得到的 50% 转化率只证明埋点链路可用，不代表真实用户效果或统计显著性。</p>
+        </section>
+
+        <section id="boundaries" class="case-section">
+          <span class="section-label">能力边界</span>
+          <h3>把没有完成的部分写清楚，也是产品可信度的一部分。</h3>
+          <ul class="boundary-list">
+            <li><b>公开页面：</b>只演示预设合成场景，不声称支持自由生成。</li>
+            <li><b>本地完整模式：</b>需要 Dify、PostgreSQL、高德和可选 Xinference/Tavily。</li>
+            <li><b>数据债务：</b>早期 Extraction 尚保留旧 category 兼容层，生产化需版本化重抽。</li>
+            <li><b>性能：</b>Dify 完整链路 P95 仍偏高，需流式响应与节点级优化。</li>
+          </ul>
+        </section>
+
+        <section id="run" class="case-section run-section">
+          <span class="section-label">运行与代码</span>
+          <h3>克隆后无需密钥即可启动 demo 模式。</h3>
+          <pre><code>pip install -e ".[dev]"
+uvicorn inspitrip.api.app:app --reload</code></pre>
+          <div class="run-actions">
+            <a class="primary-link" href="https://github.com/Hai-Chao-ren/InspriTrip">浏览源代码 ↗</a>
+            <a class="secondary-link" href="https://github.com/Hai-Chao-ren/InspriTrip#完整模式">完整模式说明</a>
+          </div>
+        </section>
+      </article>
+
+      <nav class="case-toc" aria-label="项目目录">
+        <p>项目目录</p>
+        <a href="#problem">产品问题</a>
+        <a href="#decisions">关键决策</a>
+        <a href="#architecture">系统架构</a>
+        <a href="#data-model">数据可信层</a>
+        <a href="#evaluation">评测与性能</a>
+        <a href="#experiment">指标与实验</a>
+        <a href="#boundaries">能力边界</a>
+        <a href="#run">运行与代码</a>
+      </nav>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>InspiTrip · AI Product Portfolio</span>
+    <span>Public demo uses synthetic data only.</span>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

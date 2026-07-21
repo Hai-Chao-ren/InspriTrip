@@ -1,0 +1,6 @@
+{"destination_id":"DEMO_QINGLAN_ISLAND","duration_min":2,"duration_max":3,"budget_min":680,"budget_typical":820,"budget_max":980,"budget_filterable":true,"requires_ferry":true}
+{"destination_id":"DEMO_SONGXI_TOWN","duration_min":1,"duration_max":2,"budget_min":420,"budget_typical":620,"budget_max":760,"budget_filterable":true,"requires_ferry":false}
+{"destination_id":"DEMO_ZHUYIN_VALLEY","duration_min":2,"duration_max":2,"budget_min":520,"budget_typical":760,"budget_max":920,"budget_filterable":true,"requires_ferry":false}
+{"destination_id":"DEMO_NANAN_ART","duration_min":1,"duration_max":1,"budget_min":280,"budget_typical":460,"budget_max":680,"budget_filterable":true,"requires_ferry":false}
+{"destination_id":"DEMO_QIHU_CAMP","duration_min":1,"duration_max":2,"budget_min":580,"budget_typical":820,"budget_max":1080,"budget_filterable":true,"requires_ferry":false}
+{"destination_id":"DEMO_YUNQUAN_TOWN","duration_min":2,"duration_max":2,"budget_min":880,"budget_typical":1180,"budget_max":1580,"budget_filterable":true,"requires_ferry":false}
